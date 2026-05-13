@@ -29,10 +29,6 @@ export const routes: Routes = [
             {
                 path: 'applications',
                 loadComponent: () => import('./features/applications/applications.page').then(m => m.ApplicationsPage)
-            },
-            {
-                path: '**',
-                redirectTo: 'dashboard'
             }
         ],
     },

@@ -1,1 +1,28 @@
-<p>sidebar.component works!</p>
+<aside class="border-r bg-white p-6">
+    <div class="mb-10">
+        <h1 class="text-xl font-bold">SeniorPath AI</h1>
+        <p class="text-sm text-zinc-500">Agent carrière Angular</p>
+    </div>
+
+    <nav class="space-y-2">
+        <a routerLink="/dashboard" routerLinkActive="bg-zinc-100"
+            class="block rounded-xl px-4 py-3 text-sm font-medium">
+            Dashboard
+        </a>
+
+        <a routerLink="/jobs" routerLinkActive="bg-zinc-100"
+            class="block rounded-xl px-4 py-3 text-sm font-medium">
+            Offer
+        </a>
+
+        <a routerLink="/applications" routerLinkActive="bg-zinc-100"
+            class="block rounded-xl px-4 py-3 text-sm font-medium">
+            Applications
+        </a>
+
+        <a routerLink="/profile" routerLinkActive="bg-zinc-100"
+            class="block rounded-xl px-4 py-3 text-sm font-medium">
+            Profile
+        </a>
+    </nav>
+</aside>
