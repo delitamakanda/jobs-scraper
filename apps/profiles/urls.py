@@ -1,8 +1,10 @@
-from rest_framework.routers import DefaultRouter
-from apps.profiles.views import CandidateViewSet
+from rest_framework.routers import DefaultRouter, path
+from apps.profiles.views import CandidateDetailView
 
 router = DefaultRouter()
 
-router.register(r'', CandidateViewSet, basename='candidate')
-
 urlpatterns = router.urls
+
+urlpatterns += [
+    path('me/', CandidateDetailView.as_view(), name='me'),
+]

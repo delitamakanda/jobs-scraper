@@ -24,6 +24,9 @@ class Candidate(models.Model):
     target_salary_min = models.PositiveIntegerField(null=True, blank=True)
     target_salary_max = models.PositiveIntegerField(null=True, blank=True)
 
+    linkedin_url = models.URLField(blank=True)
+    github_url = models.URLField(blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
