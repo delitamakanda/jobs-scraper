@@ -3,9 +3,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from apps.jobs.models import JobOffer
 from apps.jobs.serializers import JobOfferSerializer, ImportJobUrlSerializer
+from apps.ai.serializers import GenerateCoverLetterSerializer, GenerateInterviewPrepSerializer
 from apps.jobs.services.job_importer import import_job_from_url
 from apps.ai.services.job_analyzer import analyze_job_offer
 from apps.ai.services.matcher import match_job_with_profile
+from apps.ai.services.content_generator import generate_cover_letter_for_job, generate_interview_prep_for_job
 
 class JobOfferViewSet(viewsets.ModelViewSet):
     serializer_class = JobOfferSerializer
@@ -50,4 +52,32 @@ class JobOfferViewSet(viewsets.ModelViewSet):
         return Response({
             'message': 'Job matching completed',
             'match': result,
+        })
+
+    @action(detail=True, methods=['post'], url_path='generate-cover-letter')
+    def generate_cover_letter(self, request, pk=None):
+        job = self.get_object()
+        profile = request.user.candidate
+        serializer = GenerateCoverLetterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cover_letter = generate_cover_letter_for_job(job, profile, **serializer.validated_data)
+        return Response({
+            'message': 'Cover letter generated',
+            'data': {
+                'content': cover_letter,
+            }
+        })
+    
+    @action(detail=True, methods=['post'], url_path='generate-interview-prep')
+    def generate_interview_prep(self, request, pk=None):
+        job = self.get_object()
+        profile = request.user.candidate
+        serializer = GenerateInterviewPrepSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        prep = generate_interview_prep_for_job(job, profile, **serializer.validated_data)
+        return Response({
+            'message': 'Interview prep generated',
+            'data': {
+                'content': prep,
+            }
         })
