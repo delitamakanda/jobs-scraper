@@ -1,9 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthStore } from '../../../core/state/auth.store';
+import { MATERIAL_IMPORTS } from '../../../shared/ui/material.imports';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  providers: [
+    AuthStore,
+  ],
+  imports: [
+    ReactiveFormsModule,
+    ...MATERIAL_IMPORTS,
+  ],
   templateUrl: './login.page.html',
-  styleUrl: './login.page.css',
+  styleUrls: ['./login.page.css'],
 })
-export class LoginPage {}
+export class LoginPage {
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  
+  readonly store = inject(AuthStore);
+
+  readonly form = this.fb.nonNullable.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+
+  submit() {
+    if (this.form.invalid) {
+      return;
+    }
+
+    const username = this.form.value.username!;
+    const password = this.form.value.password!;
+    
+    this.store.login(username, password).subscribe({
+      next: () => {
+        console.log('Form submitted:', this.form.value);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+      }
+    });
+  }
+}

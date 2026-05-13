@@ -1,1 +1,67 @@
-<p>signup.page works!</p>
+<div>
+    <h2>Sign Up</h2>
+     <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" required>
+            @if (form.get('username')?.hasError('required')) {
+                <mat-error>
+                Username is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" required>
+            @if (form.get('email')?.hasError('required')) {
+                <mat-error>
+                Email is required
+                </mat-error>
+            }
+            @if (form.get('email')?.hasError('email')) {
+                <mat-error>
+                Please enter a valid email address
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" required>
+            @if (form.get('password')?.hasError('required')) {
+                <mat-error>
+                Password is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput type="password" formControlName="password2" required>
+            @if (form.get('password2')?.hasError('required')) {
+                <mat-error>
+                Confirm Password is required
+                </mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="first_name">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="last_name">
+        </mat-form-field>
+
+        @if (store.error()) {
+            <div class="error">
+                {{ store.error() }}
+            </div>
+        }
+    
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Sign Up</button>
+     </form>
+</div>
