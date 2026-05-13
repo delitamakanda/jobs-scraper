@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
+import { Application } from '../../shared/models/application.model';
 
 @Injectable({
   providedIn: 'root',
@@ -8,19 +9,19 @@ export class ApplicationsApi {
   private readonly api = inject(ApiService);
 
   getApplications() {
-    return this.api.get('applications');
+    return this.api.get<Application[]>('applications');
   }
 
   getApplication(id: string) {
-    return this.api.get(`applications/${id}`);
+    return this.api.get<Application>(`applications/${id}`);
   }
 
-  createApplication(data: any) {
-    return this.api.post('applications', data);
+  createApplication(data: Application) {
+    return this.api.post<Application>('applications', data);
   }
 
-  updateApplication(id: string, data: any) {
-    return this.api.put(`applications/${id}`, data);
+  updateApplication(id: string, data: Application) {
+    return this.api.put<Application>(`applications/${id}`, data);
   }
 
   deleteApplication(id: string) {
