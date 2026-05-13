@@ -13,4 +13,9 @@ export const JOBS_ROUTES: Routes = [
         path: ':id',
         loadComponent: () => import('./jobs-detail/jobs-detail.page').then(m => m.JobsDetailPage)
     },
+    {
+        path: '**',
+        redirectTo: '',
+        pathMatch: 'full'
+    }
 ];

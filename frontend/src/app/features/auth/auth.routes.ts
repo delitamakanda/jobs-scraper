@@ -8,5 +8,10 @@ export const  AUTH_ROUTES: Routes = [
     {
         path: 'signup',
         loadComponent: () => import('./signup/signup.page').then(m => m.SignupPage)
+    },
+    {
+        path: '**',
+        redirectTo: 'login',
+        pathMatch: 'full'
     }
 ];
