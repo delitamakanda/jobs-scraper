@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-+*zar4eb%w+-22a_!*$k%zqc6is^25+h*+gp_6om5)@-flka4n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -56,6 +59,7 @@ INSTALLED_APPS += [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -136,9 +140,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 # Rest Framework settings
 REST_FRAMEWORK = {
