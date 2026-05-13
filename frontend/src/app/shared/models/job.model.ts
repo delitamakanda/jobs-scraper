@@ -1,13 +1,15 @@
 import { RegisterUser } from "./auth.model";
 
 export interface JobOffer {
-    id: string;
+    id: number;
     source: string;
     user: RegisterUser;
     title: string;
     description: string;
     url: string;
 
+    company: string;
+    
     raw_description: string;
     location: string;
     remote_policy: string;

@@ -1,18 +1,23 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { JobsState } from '../../../core/state/jobs.state';
+import { JobOffer } from '../../../shared/models/job.model';
 
 @Component({
   selector: 'app-jobs-create',
   imports: [
     ReactiveFormsModule
   ],
+  providers: [JobsState],
   templateUrl: './jobs-create.page.html',
   styleUrl: './jobs-create.page.css',
 })
 export class JobsCreatePage {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+
+  readonly store = inject(JobsState);
 
   readonly form = this.fb.nonNullable.group({
     title: ['', Validators.required],
@@ -26,8 +31,16 @@ export class JobsCreatePage {
       return;
     }
     
-    console.log('Form submitted:', this.form.value);
-    // Save the job to the API and navigate to the job details page.
-    this.router.navigate(['/jobs', '1']);
+    const jobData = this.form.value;
+    this.store.createJob(jobData as JobOffer).subscribe({
+      next: (response) => {
+        console.log('Job created successfully:', response.id);
+        this.router.navigate(['/jobs', response.id]);
+      },
+      error: (error) => {
+        console.error('Failed to create job:', error);
+        // Optionally show an error message to the user
+      }
+    });
   }
 }
