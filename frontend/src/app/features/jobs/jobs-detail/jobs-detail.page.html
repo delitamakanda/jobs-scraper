@@ -1,1 +1,64 @@
-<p>jobs-detail.page works!</p>
+@if (job$ | async; as job) {
+    <section class="space-y-6">
+    <div class="flex items-start justify-between">
+        <div>
+        <h2 class="text-3xl font-bold">{{ job.title }}</h2>
+        <p class="text-zinc-500">
+            {{ job.company }} · {{ job.location || 'Lieu non précisé' }}
+        </p>
+        </div>
+
+        <div class="flex gap-2">
+        <button (click)="analyze(job.id)"
+                class="rounded-xl bg-zinc-950 px-4 py-3 text-sm font-medium text-white">
+            Analyser
+        </button>
+
+        <button (click)="match(job.id)"
+                class="rounded-xl bg-white px-4 py-3 text-sm font-medium shadow-sm">
+            Matcher
+        </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-[1fr_360px] gap-6">
+        <article class="rounded-2xl bg-white p-6 shadow-sm">
+        <h3 class="mb-3 text-lg font-semibold">Résumé IA</h3>
+        <p class="text-zinc-700">
+            {{ job.ai_summary || 'Offre pas encore analysée.' }}
+        </p>
+
+        <h3 class="mt-8 mb-3 text-lg font-semibold">Description</h3>
+        <p class="whitespace-pre-line text-sm text-zinc-600">
+            {{ job.raw_description }}
+        </p>
+        </article>
+
+        <aside class="space-y-4">
+        <div class="rounded-2xl bg-white p-5 shadow-sm">
+            <h3 class="mb-3 font-semibold">Compétences requises</h3>
+
+            <div class="flex flex-wrap gap-2">
+            @for (skill of job.required_skills; track skill) {
+                <span class="rounded-full bg-zinc-100 px-3 py-1 text-xs">
+                {{ skill }}
+                </span>
+            }
+            </div>
+        </div>
+
+        <div class="rounded-2xl bg-white p-5 shadow-sm">
+            <h3 class="mb-3 font-semibold">Nice to have</h3>
+
+            <div class="flex flex-wrap gap-2">
+            @for (skill of job.nice_to_have_skills; track skill) {
+                <span class="rounded-full bg-zinc-100 px-3 py-1 text-xs">
+                {{ skill }}
+                </span>
+            }
+            </div>
+        </div>
+        </aside>
+    </div>
+    </section>
+}
