@@ -1,0 +1,3 @@
+[project]
+name = "career-agent-api"
+requires-python = ">=3.14"
