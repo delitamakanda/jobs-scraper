@@ -9,10 +9,10 @@ export class ProfileApi {
   private readonly api = inject(ApiService);
 
   getProfile() {
-    return this.api.get<Profile>('/profile/me');
+    return this.api.get<Profile>('profile/me');
   }
 
-  updateProfile(data: Profile) {
-    return this.api.put<Profile>('/profile/me', data);
+  updateProfile(data: Partial<Profile>) {
+    return this.api.patch<Profile>('profile/me/', data);
   }
 }
