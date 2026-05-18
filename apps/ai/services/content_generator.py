@@ -126,5 +126,4 @@ IMPORTANT:
 - Assure-toi que le JSON est complet et fermé correctement
 """
     raw_response = client.chat(system_prompt=system_prompt, user_prompt=user_prompt)
-    print(f"Interview prep questions: {raw_response}")
     return parse_json_response(raw_response)
