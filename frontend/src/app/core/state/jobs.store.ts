@@ -9,7 +9,7 @@ import { tap } from 'rxjs/internal/operators/tap';
 @Injectable({
   providedIn: 'root',
 })
-export class JobsState {
+export class JobsStore {
   private readonly api = inject(JobsApi);
 
   private _loading = signal<boolean>(false);
@@ -134,6 +134,36 @@ export class JobsState {
       }),
       catchError((err) => {
         this._error.set('Failed to match job');
+        this._loading.set(false);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  generateCoverletter(id: number): Observable<{ message: string; data: { content: string };}> {
+    this._loading.set(true);
+    this._error.set(null);
+    return this.api.generateCoverletter(id).pipe(
+      tap(() => {
+        this._loading.set(false);
+      }),
+      catchError((err) => {
+        this._error.set('Failed to generate cover letter');
+        this._loading.set(false);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  generateInterviewPreparation(id: number): Observable<{ message: string; data: { content: string };}> {
+    this._loading.set(true);
+    this._error.set(null);
+    return this.api.generateInterviewPreparation(id).pipe(
+      tap(() => {
+        this._loading.set(false);
+      }),
+      catchError((err) => {
+        this._error.set('Failed to generate interview preparation');
         this._loading.set(false);
         return throwError(() => err);
       })

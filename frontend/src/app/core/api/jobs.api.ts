@@ -37,4 +37,11 @@ export class JobsApi {
     return this.api.post(`jobs/${id}/match/`, {});
   }
 
+  generateCoverletter(id: number): Observable<{ message: string; data: { content: string };}> {
+    return this.api.post(`jobs/${id}/generate-cover-letter/`, {});
+  }
+
+  generateInterviewPreparation(id: number): Observable<{ message: string; data: { content: string };}> {
+    return this.api.post(`jobs/${id}/generate-interview-prep/`, {});
+  }
 }

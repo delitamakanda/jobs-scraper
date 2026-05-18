@@ -1,1 +1,8 @@
-<p>applications.page works!</p>
+<div>
+@for (application of applications$ | async; track application.id) {
+    <div class="application-card">
+        <h3>{{ application.status }}</h3>
+        <p>{{ application.notes }}</p>
+    </div>
+}
+</div>

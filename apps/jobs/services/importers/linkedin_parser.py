@@ -9,6 +9,7 @@ def parse_linkedin_job(html_content: str, url: str, source: str) -> ImportedJob:
     soup = BeautifulSoup(html_content, 'lxml')
 
     title = ''
+    company = ''
 
     og_title = soup.find('meta', attrs={'property': 'og:title'})
     if og_title:
@@ -30,7 +31,7 @@ def parse_linkedin_job(html_content: str, url: str, source: str) -> ImportedJob:
         )
     return ImportedJob(
         title=title,
-        company='',
+        company=company,
         location='',
         description=description,
         url=url,
