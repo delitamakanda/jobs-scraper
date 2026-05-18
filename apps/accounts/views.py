@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from apps.accounts.serializers import LoginSerializer, RegisterSerializer
 
+
 class LoginView(APIView):
     permission_classes = [AllowAny]
 
