@@ -3,7 +3,6 @@ import re
 
 
 def parse_json_response(raw_response) -> dict:
-    print(f'Réponse brute : {raw_response}')
     try:
         return json.loads(raw_response)
     except json.JSONDecodeError:
