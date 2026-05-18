@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+# python-dotenv is used to load environment variables from a .env file in development
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -156,6 +162,5 @@ REST_FRAMEWORK = {
 }
 
 # AI settings
-TONGYI_API_KEY = os.getenv('TONGYI_API_KEY', 'your_tongyi_api_key')
-TONGYI_API_URL = os.getenv('TONGYI_API_URL', 'your_tongyi_api_url')
-TONGYI_MODEL = os.getenv('TONGYI_MODEL', 'qwen-plus')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your_openai_api_key')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.4-mini')
