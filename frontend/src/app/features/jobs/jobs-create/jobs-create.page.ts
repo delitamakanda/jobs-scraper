@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JobsState } from '../../../core/state/jobs.state';
+import { JobsStore } from '../../../core/state/jobs.store';
 import { JobOffer } from '../../../shared/models/job.model';
 
 @Component({
@@ -9,15 +9,15 @@ import { JobOffer } from '../../../shared/models/job.model';
   imports: [
     ReactiveFormsModule
   ],
-  providers: [JobsState],
+  providers: [JobsStore],
   templateUrl: './jobs-create.page.html',
-  styleUrl: './jobs-create.page.css',
+  styleUrls: ['./jobs-create.page.css'],
 })
 export class JobsCreatePage {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
-  readonly store = inject(JobsState);
+  readonly store = inject(JobsStore);
 
   readonly form = this.fb.nonNullable.group({
     title: ['', Validators.required],

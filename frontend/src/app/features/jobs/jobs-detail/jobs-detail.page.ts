@@ -2,20 +2,20 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { of, switchMap } from 'rxjs';
-import { JobsState } from '../../../core/state/jobs.state';
+import { JobsStore } from '../../../core/state/jobs.store';
 
 @Component({
   selector: 'app-jobs-detail',
   imports: [
     AsyncPipe
   ],
-  providers: [JobsState],
+  providers: [JobsStore],
   templateUrl: './jobs-detail.page.html',
-  styleUrl: './jobs-detail.page.css',
+  styleUrls: ['./jobs-detail.page.css'] ,
 })
 export class JobsDetailPage {
   private readonly route = inject(ActivatedRoute);
-  readonly store = inject(JobsState);
+  readonly store = inject(JobsStore);
 
   readonly job$ = this.route.paramMap.pipe(
     switchMap(params => {
@@ -49,6 +49,28 @@ export class JobsDetailPage {
         },
         error: (err) => {
           console.error('Error matching job:', err);
+        }
+      });
+    }
+
+    generateCoverLetter(id: number) {
+      return this.store.generateCoverletter(id).subscribe({
+        next: (result) => {
+          console.log('Generated cover letter:', result);
+        },
+        error: (err) => {
+          console.error('Error generating cover letter:', err);
+        }
+      });
+    }
+
+    generateInterviewPreparation(id: number) {
+      return this.store.generateInterviewPreparation(id).subscribe({
+        next: (result) => {
+          console.log('Generated interview preparation:', result);
+        },
+        error: (err) => {
+          console.error('Error generating interview preparation:', err);
         }
       });
     }

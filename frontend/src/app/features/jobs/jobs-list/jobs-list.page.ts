@@ -1,7 +1,7 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { JobsState } from '../../../core/state/jobs.state';
+import { JobsStore } from '../../../core/state/jobs.store';
 import { JobOffer } from '../../../shared/models/job.model';
 import { Observable } from 'rxjs';
 
@@ -13,13 +13,13 @@ import { Observable } from 'rxjs';
     DatePipe,
   ],
   providers: [
-    JobsState,
+    JobsStore,
   ],
   templateUrl: './jobs-list.page.html',
   styleUrls: ['./jobs-list.page.css'],
 })
 export class JobsListPage {
-  private readonly store = inject(JobsState);
+  private readonly store = inject(JobsStore);
 
   protected jobs$!: Observable<JobOffer[]>;
 

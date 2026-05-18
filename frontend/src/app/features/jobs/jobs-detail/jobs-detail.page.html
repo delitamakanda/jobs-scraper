@@ -4,7 +4,7 @@
         <div>
         <h2 class="text-3xl font-bold">{{ job.title }}</h2>
         <p class="text-zinc-500">
-            {{ job.company }} · {{ job.location || 'Lieu non précisé' }}
+            {{ job.company || 'Non précisé' }} · {{ job.location || 'Lieu non précisé' }}
         </p>
         </div>
 
@@ -17,6 +17,16 @@
         <button (click)="match(job.id)"
                 class="rounded-xl bg-white px-4 py-3 text-sm font-medium shadow-sm">
             Matcher
+        </button>
+
+        <button (click)="generateCoverLetter(job.id)"
+                class="rounded-xl bg-white px-4 py-3 text-sm font-medium shadow-sm">
+            Lettre de motivation
+        </button>
+
+        <button (click)="generateInterviewPreparation(job.id)"
+                class="rounded-xl bg-white px-4 py-3 text-sm font-medium shadow-sm">
+            Préparation à l'entretien
         </button>
         </div>
     </div>

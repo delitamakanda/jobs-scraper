@@ -9,22 +9,22 @@ export class ApplicationsApi {
   private readonly api = inject(ApiService);
 
   getApplications() {
-    return this.api.get<Application[]>('applications');
+    return this.api.get<Application[]>('applications/');
   }
 
-  getApplication(id: string) {
-    return this.api.get<Application>(`applications/${id}`);
+  getApplication(id: number) {
+    return this.api.get<Application>(`applications/${id}/`);
   }
 
   createApplication(data: Application) {
-    return this.api.post<Application>('applications', data);
+    return this.api.post<Application>('applications/', data);
   }
 
-  updateApplication(id: string, data: Application) {
-    return this.api.put<Application>(`applications/${id}`, data);
+  updateApplication(id: number, data: Application) {
+    return this.api.put<Application>(`applications/${id}/`, data);
   }
 
-  deleteApplication(id: string) {
-    return this.api.delete(`applications/${id}`);
+  deleteApplication(id: number) {
+    return this.api.delete(`applications/${id}/`);
   }
 }

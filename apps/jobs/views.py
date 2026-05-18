@@ -60,7 +60,7 @@ class JobOfferViewSet(viewsets.ModelViewSet):
         profile = request.user.candidate
         serializer = GenerateCoverLetterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        cover_letter = generate_cover_letter_for_job(job, profile, **serializer.validated_data)
+        cover_letter = generate_cover_letter_for_job(job=job, profile=profile, **serializer.validated_data)
         return Response({
             'message': 'Cover letter generated',
             'data': {
@@ -74,7 +74,7 @@ class JobOfferViewSet(viewsets.ModelViewSet):
         profile = request.user.candidate
         serializer = GenerateInterviewPrepSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        prep = generate_interview_prep_for_job(job, profile, **serializer.validated_data)
+        prep = generate_interview_prep_for_job(job=job, profile=profile, **serializer.validated_data)
         return Response({
             'message': 'Interview prep generated',
             'data': {
