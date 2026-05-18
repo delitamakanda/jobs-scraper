@@ -72,6 +72,44 @@ export class JobsState {
     );
   }
 
+  deleteJob(id: number): Observable<void> {
+    this._loading.set(true);
+    this._error.set(null);
+    return this.api.deleteJob(id).pipe(
+      tap(() => {
+        const currentJobs = this._jobs();
+        this._jobs.set(currentJobs.filter(job => job.id !== id));
+        if (this._selectedJob()?.id === id) {
+          this._selectedJob.set(null);
+        }
+        this._loading.set(false);
+      }),
+      catchError((err) => {
+        this._error.set('Failed to delete job');
+        this._loading.set(false);
+        return throwError(() => err);
+      })
+    );
+  }
+
+  importFromUrl(url: string): Observable<JobOffer> {
+    this._loading.set(true);
+    this._error.set(null);
+    return this.api.importFromUrl(url).pipe(
+      tap((job: JobOffer) => {
+        const currentJobs = this._jobs();
+        this._jobs.set([...currentJobs, job]);
+        this._selectedJob.set(job);
+        this._loading.set(false);
+      }),
+      catchError((err) => {
+        this._error.set('Failed to import job');
+        this._loading.set(false);
+        return throwError(() => err);
+      })
+    );
+  }
+
   analyzeJob(id: number): Observable<{message: string; analysis: any; job: JobOffer}> {
     this._loading.set(true);
     this._error.set(null);

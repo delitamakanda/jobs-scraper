@@ -26,6 +26,10 @@ export class JobsCreatePage {
     raw_description: ['', Validators.required],
   });
 
+  readonly urlForm = this.fb.nonNullable.group({
+    url: ['', Validators.required],
+  });
+
   submit() {
     if (this.form.invalid) {
       return;
@@ -39,6 +43,24 @@ export class JobsCreatePage {
       },
       error: (error) => {
         console.error('Failed to create job:', error);
+        // Optionally show an error message to the user
+      }
+    });
+  }
+
+  importUrl() {
+    if (this.urlForm.invalid) {
+      return;
+    }
+
+    const url = this.urlForm.getRawValue().url;
+    this.store.importFromUrl(url).subscribe({
+      next: (response) => {
+        console.log('Job imported successfully:', response.id);
+        this.router.navigate(['/jobs', response.id]);
+      },
+      error: (error) => {
+        console.error('Failed to import job:', error);
         // Optionally show an error message to the user
       }
     });

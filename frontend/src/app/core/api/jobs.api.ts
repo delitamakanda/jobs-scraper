@@ -21,8 +21,12 @@ export class JobsApi {
     return this.api.post('jobs/', data);
   }
 
-  importUrl(): Observable<JobOffer> {
-    return this.api.get('jobs/import-url/');
+  deleteJob(id: number): Observable<void> {
+    return this.api.delete(`jobs/${id}/`);
+  }
+
+  importFromUrl(url: string): Observable<JobOffer> {
+    return this.api.post('jobs/import-url/', { url });
   }
 
   analyzeJob(id: number): Observable<{message: string; analysis: any; job: JobOffer}> {
@@ -32,4 +36,5 @@ export class JobsApi {
   matchJob(id: number): Observable<{message: string; matches: any;}> {
     return this.api.post(`jobs/${id}/match/`, {});
   }
+
 }

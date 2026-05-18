@@ -19,8 +19,12 @@
               <div>
                 <h3 class="text-lg font-semibold">{{ job.title }}</h3>
                 <p class="text-sm text-zinc-500">
-                  {{ job.company }} · {{ job.location || 'Lieu non précisé' }}
+                  {{ job.company }} · {{ job.location || 'Lieu non précisé' }} · {{ job.created_at | date:'shortDate' }}
                 </p>
+                <button (click)="deleteJob(job.id)"
+                        class="text-sm text-red-600 hover:underline cursor-pointer">
+                  Supprimer
+                </button> 
               </div>
 
               <span class="rounded-full bg-zinc-100 px-3 py-1 text-xs">
