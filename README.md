@@ -1,4 +1,4 @@
-# Jobs Scraper / Career Agent API
+# Jobs Scraper / Career Agent API [![Deploy Frontend](https://github.com/delitamakanda/jobs-scraper/actions/workflows/deploy-frontend.yml/badge.svg?branch=main&event=push)](https://github.com/delitamakanda/jobs-scraper/actions/workflows/deploy-frontend.yml)
 
 Django REST API for collecting job offers, extracting job details from URLs, and matching offers against a candidate profile with AI-assisted analysis.
 
