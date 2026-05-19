@@ -14,7 +14,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: gh-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     defaults:
       run:
@@ -47,4 +49,5 @@ jobs:
           path: frontend/dist/frontend/browser
       
       - name: Deploy to Github Pages
+        id: deployment
         uses: actions/deploy-pages@v4
