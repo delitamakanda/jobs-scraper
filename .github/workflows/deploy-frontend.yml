@@ -24,6 +24,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,7 +37,9 @@ jobs:
       - name: Install dependencies and build
         run: |
           npm ci
-          npm run build -- --configuration production --base-href /frontend/
+          npm run build -- --configuration production --base-href "/${{ github.event.repository.name }}/"
+          cp dist/frontend/browser/index.html dist/frontend/browser/404.html
+          touch dist/frontend/browser/.nojekyll
 
       - name: Upload Github Pages artifacts
         uses: actions/upload-pages-artifact@v3
@@ -43,5 +48,3 @@ jobs:
       
       - name: Deploy to Github Pages
         uses: actions/deploy-pages@v4
-        with:
-          branch: main
