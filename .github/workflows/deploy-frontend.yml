@@ -34,7 +34,7 @@ jobs:
       - name: Install dependencies and build
         run: |
           npm ci
-          npm run build -- --configuration production --base-href /jobs-scraper/
+          npm run build -- --configuration production --base-href /frontend/
 
       - name: Upload Github Pages artifacts
         uses: actions/upload-pages-artifact@v3
