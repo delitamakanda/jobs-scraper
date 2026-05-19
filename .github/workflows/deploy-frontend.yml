@@ -39,7 +39,7 @@ jobs:
       - name: Upload Github Pages artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: frontend/dist/frontend/browser/
+          path: dist/frontend/browser
       
       - name: Deploy to Github Pages
         uses: actions/deploy-pages@v4
