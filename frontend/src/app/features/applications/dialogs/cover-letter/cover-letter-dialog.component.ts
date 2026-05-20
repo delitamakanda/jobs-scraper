@@ -1,9 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ApplicationStore } from '../../../../core/state/application.store';
 
 @Component({
-  selector: 'app-cover-letter-dialogs',
-  imports: [],
+  selector: 'app-cover-letter-dialog',
+  imports: [
+    MatDialogModule,
+    MatButtonModule
+  ],
+  providers: [
+    ApplicationStore,
+  ],
+  standalone: true,
   templateUrl: './cover-letter-dialog.component.html',
-  styleUrl: './cover-letter-dialog.component.css',
+  styleUrls: ['./cover-letter-dialog.component.css'],
 })
-export class CoverLetterDialogComponent {}
+export class CoverLetterDialogComponent {
+  readonly store = inject(ApplicationStore);
+
+  copyCoverLetter(): void {
+    navigator.clipboard.writeText(this.store.content());
+  }
+}

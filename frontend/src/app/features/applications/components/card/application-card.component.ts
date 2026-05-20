@@ -1,9 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+import { Application } from '../../../../shared/models/application.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-application-card',
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './application-card.component.html',
-  styleUrl: './application-card.component.css',
+  styleUrls: ['./application-card.component.css'],
 })
-export class ApplicationCardComponent {}
+export class ApplicationCardComponent {
+  application = input.required<Application>();
+
+  generateCoverLetter = output<Application>();
+  generateInterviewPrep = output<Application>();
+  
+}

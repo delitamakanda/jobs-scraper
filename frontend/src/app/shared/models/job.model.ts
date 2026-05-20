@@ -11,6 +11,7 @@ export interface JobOffer {
     company: string;
     
     raw_description: string;
+    match?: JobMatch | null;
     location: string;
     remote_policy: string;
     contract_type: string;
