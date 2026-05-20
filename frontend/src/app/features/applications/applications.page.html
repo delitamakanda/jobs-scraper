@@ -1,8 +1,18 @@
-<div>
-@for (application of applications$ | async; track application.id) {
-    <div class="application-card">
-        <h3>{{ application.status }}</h3>
-        <p>{{ application.notes }}</p>
-    </div>
-}
-</div>
+<section class="space-y-6">
+      <div>
+        <h1 class="text-3xl font-bold text-zinc-950">
+          Candidatures
+        </h1>
+        <p class="mt-1 text-zinc-500">
+          Suivi et actions IA pour ta recherche Angular senior.
+        </p>
+      </div>
+
+      @if (applications$ | async; as applications) {
+        <app-application-kanban
+            [applications]="applications"
+            (generateCoverLetter)="generateCoverLetter($event)"
+            (generateInterviewPrep)="generateInterviewPrep($event)"
+        />
+      }
+</section>

@@ -22,7 +22,7 @@ class Application(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.job_offer.job.title} - {self.job_offer.user.first_name} {self.job_offer.user.last_name}'
+        return f'{self.job_offer.title} - {self.job_offer.user.first_name} {self.job_offer.user.last_name}'
     
     class Meta:
         ordering = ['-created_at']

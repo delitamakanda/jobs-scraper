@@ -1,1 +1,39 @@
-<p>application-kanban.component works!</p>
+<div class="grid grid-cols-1 gap-4 xl:grid-cols-5">
+      @for (column of columns; track column.status) {
+        <section class="rounded-2xl bg-zinc-100/70 p-3">
+          <header class="mb-3 flex items-center justify-between px-1">
+            <div>
+              <h2 class="text-sm font-semibold text-zinc-900">
+                {{ column.title }}
+              </h2>
+              <p class="text-xs text-zinc-500">
+                {{ column.description }}
+              </p>
+            </div>
+
+            <span class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-zinc-600">
+              {{ getApplicationsByStatus(column.status).length }}
+            </span>
+          </header>
+
+          <div class="space-y-3">
+            @for (
+              application of getApplicationsByStatus(column.status);
+              track application.id
+            ) {
+              <app-application-card
+                [application]="application"
+                (generateCoverLetter)="generateCoverLetter.emit($event)"
+                (generateInterviewPrep)="generateInterviewPrep.emit($event)"
+              />
+            } @empty {
+              <div class="rounded-2xl border border-dashed border-zinc-300 bg-white/60 p-4 text-center">
+                <p class="text-xs text-zinc-400">
+                  Aucune candidature ici.
+                </p>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    </div>

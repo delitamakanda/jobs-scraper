@@ -1,1 +1,20 @@
-<p>cover-letter-dialog.component works!</p>
+ <section class="w-[700px] p-6">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-bold">
+          Cover Letter
+        </h2>
+
+        <button
+          mat-button
+          (click)="copyCoverLetter()"
+        >
+          Copy
+        </button>
+      </div>
+
+      <div class="rounded-2xl bg-zinc-50 p-5">
+        <pre class="whitespace-pre-wrap">
+        {{ store.content() }}
+        </pre>
+      </div>
+</section>
