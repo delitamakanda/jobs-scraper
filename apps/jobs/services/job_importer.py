@@ -1,5 +1,6 @@
 from apps.ai.services.job_analyzer import analyze_job_offer
 from apps.jobs.models import JobOffer
+from apps.applications.models import Application
 from apps.jobs.services.importers.source_detector import detect_source
 from apps.jobs.services.importers.html_fetcher import fetch_html
 from apps.jobs.services.importers.generic_parser import parse_generic_job
@@ -26,5 +27,9 @@ def import_job_from_url(url: str, user) -> JobOffer:
         url=imported.url,
         raw_description=imported.description,
     )
+    Application.objects.create(
+        job_offer=job
+    )
     analyze_job_offer(job)
+
     return job

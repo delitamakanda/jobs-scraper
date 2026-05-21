@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from apps.jobs.models import JobOffer
+from apps.applications.models import Application
 from apps.jobs.serializers import JobOfferSerializer, ImportJobUrlSerializer
 from apps.ai.serializers import GenerateCoverLetterSerializer, GenerateInterviewPrepSerializer
 from apps.jobs.services.job_importer import import_job_from_url
@@ -17,6 +18,9 @@ class JobOfferViewSet(viewsets.ModelViewSet):
         return JobOffer.objects.filter(user=self.request.user)
     
     def perform_create(self, serializer):
+        Application.objects.create(
+            job_offer=serializer.instance
+        )
         serializer.save(user=self.request.user)
     
     @action(detail=False, methods=['post'], url_path='import-url')
