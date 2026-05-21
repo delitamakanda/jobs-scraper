@@ -38,7 +38,9 @@ export class LoginPage {
     this.store.login(username, password).subscribe({
       next: () => {
         console.log('Form submitted:', this.form.value);
-        this.router.navigate(['/dashboard']);
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 0);
       },
       error: (error) => {
         console.error('Login failed:', error);
