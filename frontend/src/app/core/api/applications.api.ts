@@ -30,25 +30,30 @@ export class ApplicationsApi {
   }
 
   generateCoverletter(id: number, data: {
-    tone?: 'formal' | 'neutral',
-    format?: 'linkedin' | 'pdf',
-    language?: 'fr' | 'en',
-    max_length?: 'short' | 'medium' | 'long',
+    tone: 'formal' | 'informal' | 'friendly',
+    format: 'linkedin' | 'email' | 'short_letter',
+    language: 'fr' | 'en' | 'es',
+    max_length: 'short' | 'medium' | 'long',
   }): Observable<{ message: string; data: { content: string };}> {
       return this.api.post(`jobs/${id}/generate-cover-letter/`, data);
     }
   
     generateInterviewPreparation(id: number, data: {
-      focus?: [
-        'angular_architecture',
-        'signals',
-        'testing',
-        'migration',
-      ],
-      difficulty?: 'senior' | 'mid' | 'junior',
-      language?: 'fr' | 'en',
-    }): Observable<{ message: string; data: { content: string };}> {
-      return this.api.post(`jobs/${id}/generate-interview-prep/`, data);
+      focus: string[],
+      difficulty: 'senior' | 'mid' | 'expert',
+      language: 'fr' | 'en' | 'es',
+    }): Observable<{ message: string; data: { content: {
+      mock_answers: string[];
+      questions: string[];
+      weak_points: string[];
+      recommended_topics: string[];
+    } };}> {
+      return this.api.post(`jobs/${id}/generate-interview-prep/`, {
+        focus: data.focus,
+        difficulty: data.difficulty,
+        language: data.language,
+      });
     }
 
 }
+

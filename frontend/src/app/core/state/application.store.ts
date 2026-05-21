@@ -15,11 +15,21 @@ export class ApplicationStore {
   private _selectedApplication = signal<Application | null>(null);
   private _content = signal<string>('');
 
+  private _questions = signal<string[]>([]);
+  private _mockAnswers = signal<string[]>([]);
+  private _recommendedTopics = signal<string[]>([]);
+  private _weakPoints = signal<string[]>([]);
+
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
   readonly applications = this._applications.asReadonly();
   readonly selectedApplication = this._selectedApplication.asReadonly();
   readonly content = this._content.asReadonly();
+
+  readonly questions = this._questions.asReadonly();
+  readonly mockAnswers = this._mockAnswers.asReadonly();
+  readonly recommendedTopics = this._recommendedTopics.asReadonly();
+  readonly weakPoints = this._weakPoints.asReadonly();
 
   readonly savedApplications = computed(() => this._applications().filter((application) => application.status === 'SAVED'));
 
@@ -51,10 +61,10 @@ export class ApplicationStore {
   }
 
   generateCoverletter(id: number, options: {
-    tone?: 'formal' | 'neutral',
-    format?: 'linkedin' | 'pdf',
-    language?: 'fr' | 'en',
-    max_length?: 'short' | 'medium' | 'long',
+    tone: 'formal' | 'informal' | 'friendly',
+    format: 'linkedin' | 'email' | 'short_letter',
+    language: 'fr' | 'en' | 'es',
+    max_length: 'short' | 'medium' | 'long',
   }): Observable<{ message: string; data: { content: string };}> {
       this._loading.set(true);
       this._error.set(null);
@@ -72,20 +82,23 @@ export class ApplicationStore {
     };
 
     generateInterviewPreparation(id: number, options: {
-      focus?: [
-        'angular_architecture',
-        'signals',
-        'testing',
-        'migration',
-      ],
-      difficulty?: 'senior' | 'mid' | 'junior',
-      language?: 'fr' | 'en',
-    }): Observable<{ message: string; data: { content: string };}> {
+      focus: string[],
+      difficulty: 'senior' | 'mid' | 'expert',
+      language: 'fr' | 'en' | 'es',
+    }): Observable<{ message: string; data: { content: {
+      mock_answers: string[];
+      questions: string[];
+      weak_points: string[];
+      recommended_topics: string[];
+    } };}> {
       this._loading.set(true);
       this._error.set(null);
       return this.api.generateInterviewPreparation(id, options).pipe(
         tap((response) => {
-          this._content.set(response.data.content);
+          this._questions.set(response.data.content.questions);
+          this._mockAnswers.set(response.data.content.mock_answers);
+          this._recommendedTopics.set(response.data.content.recommended_topics);
+          this._weakPoints.set(response.data.content.weak_points);
           this._loading.set(false);
         }),
         catchError((err) => {

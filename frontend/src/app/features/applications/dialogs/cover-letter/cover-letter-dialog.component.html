@@ -1,20 +1,69 @@
- <section class="w-[700px] p-6">
-      <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-2xl font-bold">
-          Cover Letter
-        </h2>
+<div mat-dialog-title class="mb-6 flex items-center justify-between">
+  <h2 class="text-2xl font-bold">Cover Letter</h2>
+</div>
+<mat-dialog-content class="w-[700px] p-6">
+    <form (ngSubmit)="generateCoverLetter($event)" [formGroup]="form" class="mb-6">
+      <mat-form-field class="mb-4">
+        <mat-label for="tone">Tone</mat-label>
+        <select matNativeControl id="tone" class="w-full border rounded px-3 py-2" formControlName="tone">
+          <option value="formal">Formal</option>
+          <option value="informal">Informal</option>
+          <option value="friendly">Friendly</option>
+        </select>
+      </mat-form-field>
 
-        <button
-          mat-button
-          (click)="copyCoverLetter()"
-        >
-          Copy
-        </button>
-      </div>
+      <mat-form-field class="mb-4">
+        <mat-label for="format">Format</mat-label>
+        <select matNativeControl id="format" class="w-full border rounded px-3 py-2" formControlName="format">
+          <option value="linkedin">LinkedIn</option>
+          <option value="email">Email</option>
+          <option value="short_letter">Short letter</option>
+        </select>
+      </mat-form-field>
 
+      <mat-form-field class="mb-4">
+        <mat-label for="language">Language</mat-label>
+        <select matNativeControl id="language" class="w-full border rounded px-3 py-2" formControlName="language">
+          <option value="fr">French</option>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+        </select>
+      </mat-form-field>
+
+      <mat-form-field class="mb-4">
+        <mat-label for="max_length">Max Length</mat-label>
+        <select matNativeControl id="max_length" class="w-full border rounded px-3 py-2" formControlName="max_length">
+          <option value="short">Short</option>
+          <option value="medium">Medium</option>
+          <option value="long">Long</option>
+        </select>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+      >
+        Generate
+      </button>
+    </form>
+
+    @if (store.content()) {
       <div class="rounded-2xl bg-zinc-50 p-5">
         <pre class="whitespace-pre-wrap">
         {{ store.content() }}
         </pre>
       </div>
-</section>
+    }
+
+    @if (store.error()) {
+      <div class="mb-4 text-red-500">
+        {{ store.error() }}
+      </div>
+    }
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="copyCoverLetter()">Copy</button>
+</mat-dialog-actions>
