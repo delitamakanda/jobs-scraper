@@ -22,7 +22,7 @@ export class AuthStore {
   readonly isLoggedIn = computed(() => !!this._token());
 
   constructor() {
-    const ACCESS_TOKEN = localStorage.getItem(AUTH_TOKEN_KEY || null);
+    const ACCESS_TOKEN = localStorage.getItem(AUTH_TOKEN_KEY) || null;
     this._token.set(ACCESS_TOKEN);
   }
 
