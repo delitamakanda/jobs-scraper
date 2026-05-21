@@ -139,34 +139,4 @@ export class JobsStore {
       })
     );
   }
-
-  generateCoverletter(id: number): Observable<{ message: string; data: { content: string };}> {
-    this._loading.set(true);
-    this._error.set(null);
-    return this.api.generateCoverletter(id).pipe(
-      tap(() => {
-        this._loading.set(false);
-      }),
-      catchError((err) => {
-        this._error.set('Failed to generate cover letter');
-        this._loading.set(false);
-        return throwError(() => err);
-      })
-    );
-  }
-
-  generateInterviewPreparation(id: number): Observable<{ message: string; data: { content: string };}> {
-    this._loading.set(true);
-    this._error.set(null);
-    return this.api.generateInterviewPreparation(id).pipe(
-      tap(() => {
-        this._loading.set(false);
-      }),
-      catchError((err) => {
-        this._error.set('Failed to generate interview preparation');
-        this._loading.set(false);
-        return throwError(() => err);
-      })
-    );
-  }
 }

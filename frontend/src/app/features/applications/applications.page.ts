@@ -4,6 +4,7 @@ import { Application } from '../../shared/models/application.model';
 import { ApplicationKanbanComponent } from './components/kanban/application-kanban.component';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { DialogsService } from './services/dialogs.service';
 
 @Component({
   selector: 'app-applications',
@@ -19,6 +20,7 @@ import { AsyncPipe } from '@angular/common';
 })
 export class ApplicationsPage implements OnInit {
   readonly store = inject(ApplicationStore);
+  readonly dialog = inject(DialogsService);
   protected applications$!: Observable<Application[]>;
 
   ngOnInit(): void {
@@ -26,18 +28,10 @@ export class ApplicationsPage implements OnInit {
   }
 
   generateCoverLetter(application: Application): void {
-    this.store.generateCoverletter(application.job_offer.id, {
-      tone: 'formal',
-      format: 'linkedin',
-      language: 'fr',
-      max_length: 'medium',
-    }).subscribe();
+    this.dialog.openCoverLetterDialog(application);
   }
 
   generateInterviewPrep(application: Application): void {
-    this.store.generateInterviewPreparation(application.job_offer.id, {
-      focus: ['angular_architecture', 'signals', 'testing', 'migration'],
-      difficulty: 'mid',
-    }).subscribe();
+    this.dialog.openInterviewPrepDialog(application);
   }
 }

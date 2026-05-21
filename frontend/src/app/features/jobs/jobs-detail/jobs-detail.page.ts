@@ -53,26 +53,4 @@ export class JobsDetailPage {
       });
     }
 
-    generateCoverLetter(id: number) {
-      return this.store.generateCoverletter(id).subscribe({
-        next: (result) => {
-          console.log('Generated cover letter:', result);
-        },
-        error: (err) => {
-          console.error('Error generating cover letter:', err);
-        }
-      });
-    }
-
-    generateInterviewPreparation(id: number) {
-      return this.store.generateInterviewPreparation(id).subscribe({
-        next: (result) => {
-          console.log('Generated interview preparation:', result);
-        },
-        error: (err) => {
-          console.error('Error generating interview preparation:', err);
-        }
-      });
-    }
-
 }

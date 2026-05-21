@@ -1,20 +1,67 @@
- <section class="w-[700px] p-6">
-      <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-2xl font-bold">
-           Interview Preparation
-        </h2>
+ <div mat-dialog-title class="mb-6 flex items-center justify-between">
+  <h2 class="text-2xl font-bold"> Interview Preparation</h2>
+</div>
+ <mat-dialog-content class="w-[700px] p-6">
+    <form [formGroup]="form" (ngSubmit)="generateInterviewPrep($event)" class="mb-6">
+      <mat-form-field class="mb-4">
+        <mat-label for="difficulty">Difficulty</mat-label>
+        <select matNativeControl id="difficulty" formControlName="difficulty" class="w-full border rounded px-3 py-2">
+          <option value="junior">Junior</option>
+          <option value="mid">Mid</option>
+          <option value="senior">Senior</option>
+        </select>
+        </mat-form-field>
 
-        <button
-          mat-button
-          (click)="copyInterviewPrep()"
+        <mat-form-field class="mb-4">
+        <mat-label for="focus">Focus Areas</mat-label>
+        <input matInput type="text" id="focus" placeholder="separer par des virgules" formControlName="focus" class="w-full border rounded px-3 py-2" placeholder="e.g., JavaScript, React, System Design">
+        </mat-form-field>
+
+          <mat-form-field class="mb-4">
+        <mat-label for="language">Language</mat-label>
+        <select matNativeControl id="language" formControlName="language" class="w-full border rounded px-3 py-2">
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+        </select>
+        </mat-form-field>
+      <button
+        mat-raised-button
+        type="submit"
+        [disabled]="form.invalid"
+        color="primary"
+        class="w-full mt-4 rounded-xl"
         >
-          Copy
+        Generate Interview Prep
         </button>
-      </div>
+      </form>
 
       <div class="rounded-2xl bg-zinc-50 p-5">
         <pre class="whitespace-pre-wrap">
-        {{ store.content() }}
+        @for (question of store.questions(); track question) {
+          <strong>Question:</strong> {{ question }}
+        }
+        @for (answer of store.mockAnswers(); track answer) {
+          <strong>Mock Answer:</strong> {{ answer }}
+        }
+        @for (topic of store.recommendedTopics(); track topic) {
+          <strong>Recommended Topic:</strong> {{ topic }}
+        }
+        @for (weakPoint of store.weakPoints(); track weakPoint) {
+          <strong>Weak Point:</strong> {{ weakPoint }}
+        }
         </pre>
       </div>
-</section>
+    
+    @if (store.error()) {
+      <div class="mb-4 text-red-500">
+        {{ store.error() }}
+      </div>
+    }
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="copyInterviewPrep()">Copy</button>
+</mat-dialog-actions>
