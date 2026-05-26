@@ -2,15 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ApplicationStore } from '../../core/state/application.store';
 import { Application } from '../../shared/models/application.model';
 import { ApplicationKanbanComponent } from './components/kanban/application-kanban.component';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { DialogsService } from './services/dialogs.service';
 
 @Component({
   selector: 'app-applications',
   imports: [
     ApplicationKanbanComponent,
-    AsyncPipe
   ],
   providers: [
     ApplicationStore
@@ -21,10 +18,9 @@ import { DialogsService } from './services/dialogs.service';
 export class ApplicationsPage implements OnInit {
   readonly store = inject(ApplicationStore);
   readonly dialog = inject(DialogsService);
-  protected applications$!: Observable<Application[]>;
 
   ngOnInit(): void {
-    this.applications$ = this.store.fetchApplications();
+    this.store.fetchApplications();
   }
 
   generateCoverLetter(application: Application): void {
@@ -33,5 +29,16 @@ export class ApplicationsPage implements OnInit {
 
   generateInterviewPrep(application: Application): void {
     this.dialog.openInterviewPrepDialog(application);
+  }
+
+  onStatusChanged(event: { application: Application, newStatus: string }): void {
+    this.store.updateApplicationStatus(event.application.id, event.newStatus as Application['status']).subscribe({
+      next: (updatedApplication) => {
+        console.log('Application status updated successfully:', updatedApplication);
+      },
+      error: (error) => {
+        console.error('Error updating application status:', error);
+      }
+    });
   }
 }
