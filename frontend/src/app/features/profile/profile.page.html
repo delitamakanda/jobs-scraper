@@ -27,6 +27,127 @@
         ></textarea>
     </div>
 
+    <div>
+        <label>Années d'expérience</label>
+        <input
+        formControlName="years_of_experience"
+        type="number"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        />
+    </div>
+
+    <div>
+        <label>Seniority</label>
+        <!-- junior, mid, senior -->
+        <select formControlName="seniority" class="mt-2 w-full rounded-xl border px-4 py-3">
+            <option value="junior">Junior</option>
+            <option value="mid">Mid</option>
+            <option value="senior">Senior</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Main skills</label>
+        <input
+        formControlName="main_skills"
+        type="text"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        placeholder="e.g., JavaScript, React, System Design"
+        />
+    </div>
+
+    <div>
+        <label>Secondary skills</label>
+        <input
+        formControlName="secondary_skills"
+        type="text"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        placeholder="e.g., TypeScript, Angular, Node.js"
+        />
+    </div>
+
+    <div>
+        <label>Industries</label>
+        <select multiple formControlName="industries" class="mt-2 w-full rounded-xl border px-4 py-3">
+            <option value="tech">Tech</option>
+            <option value="finance">Finance</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="education">Education</option>
+            <option value="e-commerce">E-commerce</option>
+            <option value="gaming">Gaming</option>
+            <option value="retail">Retail</option>
+            <option value="other">Autre</option>
+            <!-- Add more industries as needed -->
+        </select>
+    </div>
+
+    <div>
+        <label>Projects</label>
+        <input
+        formControlName="projects"
+        type="text"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        placeholder="e.g., Project A, Project B, Project C"
+        />
+    </div>
+
+    <div>
+        <label>Preferred locations</label>
+        <input
+        formControlName="preferred_locations"
+        type="text"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        placeholder="e.g., New York, San Francisco, London"
+        />
+    </div>
+
+    <div>
+        <label>Remote work preference</label>
+        <select formControlName="remote_preference" class="mt-2 w-full rounded-xl border px-4 py-3">
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="onsite">On-site</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Target salary min</label>
+        <input
+        formControlName="target_salary_min"
+        type="number"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        />
+    </div>
+
+    <div>
+        <label>Target salary max</label>
+        <input
+        formControlName="target_salary_max"
+        type="number"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        />
+    </div>
+
+    <div>
+        <label>LinkedIn</label>
+        <input
+        formControlName="linkedin_url"
+        type="text"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        placeholder="e.g., https://www.linkedin.com/in/username"
+        />
+    </div>
+
+    <div>
+        <label>GitHub</label>
+        <input
+        formControlName="github_url"
+        type="text"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+        placeholder="e.g., https://github.com/username"
+        />
+    </div>
+
     <button
         type="submit"
         class="rounded-xl bg-zinc-950 px-5 py-3 text-white"
