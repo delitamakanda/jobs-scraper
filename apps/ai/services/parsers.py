@@ -3,6 +3,7 @@ import re
 
 
 def parse_json_response(raw_response) -> dict:
+    print("Raw response from LLM:", raw_response)
     try:
         return json.loads(raw_response)
     except json.JSONDecodeError:
