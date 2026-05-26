@@ -35,16 +35,21 @@ export class ApplicationStore {
 
   readonly interviewApplications = computed(() => this._applications().filter((application) => application.status === 'INTERVIEW'));
 
-  fetchApplications(): Observable<Application[]> {
+  fetchApplications(): void {
     this._loading.set(true);
     this._error.set(null);
-    return this.api.getApplications().pipe(
+    this.api.getApplications().pipe(
       tap((applications: Application[]) => {
         console.log('Fetched applications:', applications);
         this._applications.set(applications);
         this._loading.set(false);
+      }),
+      catchError((err) => {
+        this._error.set('Failed to fetch applications');
+        this._loading.set(false);
+        return throwError(() => err);
       })
-    );
+    ).subscribe();
   }
 
   createApplication(data: Application): Observable<Application> {
@@ -103,6 +108,24 @@ export class ApplicationStore {
         }),
         catchError((err) => {
           this._error.set('Failed to generate interview preparation');
+          this._loading.set(false);
+          return throwError(() => err);
+        })
+      );
+    }
+
+    updateApplicationStatus(applicationId: number, newStatus: Application['status']): Observable<Application> {
+      this._loading.set(true);
+      this._error.set(null);
+      return this.api.updateApplication(applicationId, { status: newStatus } as Application).pipe(
+        tap((updatedApplication) => {
+          const applications = this._applications();
+          const updatedApplications = applications.map((application) => application.id === applicationId ? updatedApplication : application);
+          this._applications.set(updatedApplications);
+          this._loading.set(false);
+        }),
+        catchError((err) => {
+          this._error.set('Failed to update application status');
           this._loading.set(false);
           return throwError(() => err);
         })

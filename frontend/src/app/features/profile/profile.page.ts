@@ -22,7 +22,7 @@ export class ProfilePage {
     secondary_skills: [[] as string[]],
     industries: [[] as string[]],
     projects: [[] as string[]],
-    prefered_locations: [[] as string[]],
+    preferred_locations: [[] as string[]],
     remote_preference: [''],
     target_salary_min: [0],
     target_salary_max: [0],
