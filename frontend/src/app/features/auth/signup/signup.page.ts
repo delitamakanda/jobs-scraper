@@ -48,7 +48,7 @@ export class SignupPage {
     this.store.signup(signupData as RegisterUser).subscribe({
       next: () => {
         console.log('Signup successful:', signupData);
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/']);
       },
       error: (error) => {
         console.error('Signup failed:', error);
