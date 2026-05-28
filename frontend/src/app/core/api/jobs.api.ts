@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { JobOffer } from '../../shared/models/job.model';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,8 +9,14 @@ import { Observable } from 'rxjs';
 export class JobsApi {
   private readonly api = inject(ApiService);
 
-  getJobs(): Observable<JobOffer[]> {
-    return this.api.get('jobs/');
+  getJobs(): Observable<{ results: JobOffer[]; has_next: boolean; has_previous: boolean }> {
+    return this.api.get('jobs/').pipe(
+      map((response: any) => ({
+        results: response.results as JobOffer[],
+        has_next: response.has_next,
+        has_previous: response.has_previous
+      }))
+    );
   }
 
   getJob(id: number): Observable<JobOffer> {

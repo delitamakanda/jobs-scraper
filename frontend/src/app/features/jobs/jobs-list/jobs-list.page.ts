@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
 export class JobsListPage {
   private readonly store = inject(JobsStore);
 
-  protected jobs$!: Observable<JobOffer[]>;
+  protected jobs$!: Observable<{ results: JobOffer[]; has_next: boolean; has_previous: boolean }>;
 
   ngOnInit() {
     this.jobs$ = this.store.loadJobs();

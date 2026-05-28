@@ -22,12 +22,12 @@ export class JobsStore {
   readonly jobs = this._jobs.asReadonly();
   readonly selectedJob = this._selectedJob.asReadonly();
 
-  loadJobs(): Observable<JobOffer[]> {
+  loadJobs(): Observable<{ results: JobOffer[]; has_next: boolean; has_previous: boolean }> {
     this._loading.set(true);
     this._error.set(null);
     return this.api.getJobs().pipe(
-      tap((jobs: JobOffer[]) => {
-        this._jobs.set(jobs);
+      tap((response: { results: JobOffer[]; has_next: boolean; has_previous: boolean }) => {
+        this._jobs.set(response.results);
         this._loading.set(false);
       }),
       catchError((err) => {

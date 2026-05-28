@@ -9,6 +9,7 @@ from apps.jobs.services.job_importer import import_job_from_url
 from apps.ai.services.job_analyzer import analyze_job_offer
 from apps.ai.services.matcher import match_job_with_profile
 from apps.ai.services.content_generator import generate_cover_letter_for_job, generate_interview_prep_for_job
+from apps.core.paginators import CountlessPaginator
 
 class JobOfferViewSet(viewsets.ModelViewSet):
     serializer_class = JobOfferSerializer
@@ -16,6 +17,16 @@ class JobOfferViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return JobOffer.objects.filter(user=self.request.user)
+    
+    def list(self, request, *args, **kwargs):
+        paginator = CountlessPaginator(self.get_queryset(), per_page=10)
+        queryset = paginator.get_page(request.query_params.get('page', 1))
+        serializer = JobOfferSerializer(queryset, many=True)
+        return Response({
+            'has_next': queryset.has_next(),
+            'has_previous': queryset.has_previous(),
+            'results': serializer.data
+        })
     
     def perform_create(self, serializer):
         Application.objects.create(
