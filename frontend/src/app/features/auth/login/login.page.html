@@ -1,33 +1,44 @@
-<div>
-    <h2>Login</h2>
-    <!-- form with Angular Material components -->
-     <form [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="fill">
-            <mat-label>Username</mat-label>
-            <input matInput formControlName="username" required>
-            @if (form.get('username')?.hasError('required')) {
-                <mat-error>
-                Username is required
-                </mat-error>
-            }
-        </mat-form-field>
-    
-        <mat-form-field appearance="fill">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" formControlName="password" required>
-            @if (form.get('password')?.hasError('required')) {
-                <mat-error>
-                Password is required
-                </mat-error>
-            }
-        </mat-form-field>
+<section class="login-page">
+    <div class="login-panel">
+        <div class="login-header">
+            <p class="eyebrow">Welcome back</p>
+            <h1>Sign in to Career Agent</h1>
+            <p class="subtitle">Track jobs, applications and your profile from one place.</p>
+        </div>
 
-        @if (store.error()) {
-            <div class="error">
-                {{ store.error() }}
-            </div>
-        }
-    
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Login</button>
-     </form>
-</div>
+        <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+            <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username" required>
+                @if (form.get('username')?.hasError('required')) {
+                    <mat-error>
+                    Username is required
+                    </mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" formControlName="password" required>
+                @if (form.get('password')?.hasError('required')) {
+                    <mat-error>
+                    Password is required
+                    </mat-error>
+                }
+            </mat-form-field>
+
+            @if (store.error()) {
+                <div class="error">
+                    {{ store.error() }}
+                </div>
+            }
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Login</button>
+        </form>
+
+        <p class="signup-link">
+            No account yet?
+            <a routerLink="/auth/signup">Create one</a>
+        </p>
+    </div>
+</section>

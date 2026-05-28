@@ -1,67 +1,83 @@
-<div>
-    <h2>Sign Up</h2>
-     <form [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="fill">
-            <mat-label>Username</mat-label>
-            <input matInput formControlName="username" required>
-            @if (form.get('username')?.hasError('required')) {
-                <mat-error>
-                Username is required
-                </mat-error>
-            }
-        </mat-form-field>
+<section class="min-h-screen px-4 py-8 sm:px-6 sm:py-12">
+    <div class="mx-auto w-full max-w-xl rounded-2xl border border-slate-200/70 bg-white/90 p-6 shadow-2xl shadow-slate-400/20 backdrop-blur sm:p-8">
+        <div class="mb-6">
+            <p class="m-0 text-xs font-bold uppercase tracking-[0.16em]">Create your account</p>
+            <h1 class="mt-2 mb-2 text-2xl font-bold sm:text-3xl">Join Career Agent</h1>
+            <p class="m-0 text-sm">Build your profile and start tracking your applications in minutes.</p>
+        </div>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" formControlName="email" required>
-            @if (form.get('email')?.hasError('required')) {
-                <mat-error>
-                Email is required
-                </mat-error>
-            }
-            @if (form.get('email')?.hasError('email')) {
-                <mat-error>
-                Please enter a valid email address
-                </mat-error>
-            }
-        </mat-form-field>
+        <form class="grid gap-2" [formGroup]="form" (ngSubmit)="submit()">
+            <mat-form-field class="w-full" appearance="fill">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username" required>
+                @if (form.get('username')?.hasError('required')) {
+                    <mat-error>
+                    Username is required
+                    </mat-error>
+                }
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" formControlName="password" required>
-            @if (form.get('password')?.hasError('required')) {
-                <mat-error>
-                Password is required
-                </mat-error>
-            }
-        </mat-form-field>
+            <mat-form-field class="w-full" appearance="fill">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" required>
+                @if (form.get('email')?.hasError('required')) {
+                    <mat-error>
+                    Email is required
+                    </mat-error>
+                }
+                @if (form.get('email')?.hasError('email')) {
+                    <mat-error>
+                    Please enter a valid email address
+                    </mat-error>
+                }
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Confirm Password</mat-label>
-            <input matInput type="password" formControlName="password2" required>
-            @if (form.get('password2')?.hasError('required')) {
-                <mat-error>
-                Confirm Password is required
-                </mat-error>
-            }
-        </mat-form-field>
+            <div class="grid gap-2 sm:grid-cols-2 sm:gap-3">
+                <mat-form-field class="w-full" appearance="fill">
+                    <mat-label>Password</mat-label>
+                    <input matInput type="password" formControlName="password" required>
+                    @if (form.get('password')?.hasError('required')) {
+                        <mat-error>
+                        Password is required
+                        </mat-error>
+                    }
+                </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>First Name</mat-label>
-            <input matInput formControlName="first_name">
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-            <mat-label>Last Name</mat-label>
-            <input matInput formControlName="last_name">
-        </mat-form-field>
-
-        @if (store.error()) {
-            <div class="error">
-                {{ store.error() }}
+                <mat-form-field class="w-full" appearance="fill">
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput type="password" formControlName="password2" required>
+                    @if (form.get('password2')?.hasError('required')) {
+                        <mat-error>
+                        Confirm Password is required
+                        </mat-error>
+                    }
+                </mat-form-field>
             </div>
-        }
-    
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Sign Up</button>
-     </form>
-</div>
+
+            <div class="grid gap-2 sm:grid-cols-2 sm:gap-3">
+                <mat-form-field class="w-full" appearance="fill">
+                    <mat-label>First Name</mat-label>
+                    <input matInput formControlName="first_name">
+                </mat-form-field>
+
+                <mat-form-field class="w-full" appearance="fill">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput formControlName="last_name">
+                </mat-form-field>
+            </div>
+
+            @if (store.error()) {
+                <div class="mt-1 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                    {{ store.error() }}
+                </div>
+            }
+
+            <button class="mt-2 h-11 w-full" mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Sign Up</button>
+        </form>
+
+        <p class="mt-5 text-center text-sm ">
+            Already have an account?
+            <a class="font-semibold no-underline hover:underline" routerLink="/auth/login">Sign in</a>
+        </p>
+    </div>
+</section>
