@@ -12,7 +12,7 @@
       </div>
 
       <div class="grid gap-4">
-        @for (job of jobs$ | async; track job.id) {
+        @for (job of (jobs$ | async)?.results; track job.id) {
           <a [routerLink]="['/jobs', job.id]"
              class="block rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md">
             <div class="flex items-start justify-between">
