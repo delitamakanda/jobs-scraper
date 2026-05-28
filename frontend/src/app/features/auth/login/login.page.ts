@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthStore } from '../../../core/state/auth.store';
 import { MATERIAL_IMPORTS } from '../../../shared/ui/material.imports';
 
@@ -11,6 +11,7 @@ import { MATERIAL_IMPORTS } from '../../../shared/ui/material.imports';
   ],
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     ...MATERIAL_IMPORTS,
   ],
   templateUrl: './login.page.html',
@@ -37,7 +38,6 @@ export class LoginPage {
     
     this.store.login(username, password).subscribe({
       next: () => {
-        console.log('Form submitted:', this.form.value);
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
         }, 0);

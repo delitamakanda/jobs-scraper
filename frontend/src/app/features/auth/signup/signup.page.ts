@@ -3,12 +3,13 @@ import { AuthStore } from '../../../core/state/auth.store';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MATERIAL_IMPORTS } from '../../../shared/ui/material.imports';
 import { RegisterUser } from '../../../shared/models/auth.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     ...MATERIAL_IMPORTS,
   ],
   providers: [
@@ -47,8 +48,7 @@ export class SignupPage {
     this.store.signup(signupData as RegisterUser).subscribe({
       next: () => {
         console.log('Signup successful:', signupData);
-        // Optionally navigate to login page or dashboard
-        this.router.navigate(['/']);
+        this.router.navigate(['/auth/login']);
       },
       error: (error) => {
         console.error('Signup failed:', error);
