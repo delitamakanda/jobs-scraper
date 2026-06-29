@@ -171,7 +171,7 @@ def build_repo_summary(repo_path: str) -> str:
     return "\n".join(summary)
 
 if __name__ == "__main__":
-    repo_path = './frontend'
+    repo_path = input("Enter the path to the repository to analyze (default: './apps'): ") or './apps'
     repo_summary = build_repo_summary(repo_path)
     final_report = orchestrate(repo_summary)
     roadmap = make_roadmap(final_report)
