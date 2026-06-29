@@ -1,137 +1,222 @@
-### **Synthèse et Priorisation des Actions**
-**Contexte** : Le dépôt contient des prompts pour des agents IA spécialisés dans l’analyse d’offres d’emploi tech. **Seul `analyze_job.txt` est fonctionnel** (JSON valide, bien structuré), tandis que **3 fichiers sont vides** (`generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt`). **Aucune documentation** ni validation n’existe.
+# **Rapport Final d'Orchestration – Dépôt `ai/prompts/`**
+*Date : 29 juin 2026*
+*Orchestrateur : Agent Chef d'Orchestre*
 
 ---
 
 ---
 
-## **🚨 Problèmes Critiques (Priorité 1 : Bloquants)**
-| **Problème**               | **Impact**                          | **Solutions**                                                                                                                                                                                                                     | **Responsable**       | **Échéance** |
-|----------------------------|-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|--------------|
-| **Fichiers vides** (`generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt`) | Rend le dépôt **inutilisable** pour 75% des cas d’usage. | **Compléter les prompts** avec :<br>- **Rôle clair** (ex: `generate_pitch.txt` → "Générer un pitch personnalisé pour un candidat en JSON").<br>- **Format de sortie standardisé** (JSON valide, comme `analyze_job.txt`).<br>- **Exemples concrets** (input/output). | Équipe IA/Dev         | **Immédiat** |
-| **Absence de documentation** (README, exemples, architecture) | **Incompréhensible** pour les nouveaux contributeurs. | **Créer un `README.md`** à la racine avec :<br>- Objectif du dépôt.<br>- Description de chaque prompt (rôle, entrée/sortie).<br>- Exemples d’utilisation.<br>- Lien vers une doc technique si nécessaire (`ARCHITECTURE.md`). | Agent Documentation   | **Immédiat** |
+## **📌 Synthèse Exécutive**
+Le dépôt `ai/prompts/` est **incomplet, non standardisé et non sécurisé**, avec **3 fichiers de prompts vides sur 4** (`generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt`). Seul `analyze_job.txt` est opérationnel, avec une sortie JSON stricte mais **sans validation, tests, ou documentation**.
+**Risques majeurs** :
+- Incohérence des formats entre prompts (JSON imposé pour `analyze_job.txt`, rien pour les autres).
+- Absence de **README**, **tests**, **CI/CD**, ou **contrôles de sécurité**, rendant le dépôt **non maintenable** et **vulnérable** (fichiers vides exposés, pas de validation des entrées/sorties).
+- **Manque de modularité** : pas de sous-dossiers par domaine fonctionnel (ex: `analysis/`, `generation/`).
+- **Accessibilité limitée** : JSON brut peu lisible pour les outils d’assistance (lecteurs d’écran).
+
+**Priorité absolue** :
+1. **Compléter les prompts vides** (blocage fonctionnel).
+2. **Standardiser les formats** (JSON pour tous, schémas de validation).
+3. **Ajouter un README + documentation technique** (blocage pour les contributeurs).
+4. **Sécuriser les fichiers vides** (risque d’injection si référencés).
+5. **Mettre en place des tests et une CI/CD** (garantie de qualité).
 
 ---
 
-## **⚠️ Problèmes Importants (Priorité 2 : Amélioration de la Qualité)**
-| **Problème**               | **Impact**                          | **Solutions**                                                                                                                                                                                                                     | **Responsable**       | **Échéance** |
-|----------------------------|-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|--------------|
-| **Pas de validation des sorties** | Risque d’**incohérences** dans les réponses des agents. | **Ajouter des schémas JSON** pour valider les sorties de chaque prompt.<br>- Utiliser un outil comme [`json-schema`](https://json-schema.org/) ou un script Python (`jsonschema` library).<br>- Exemple : Vérifier que `analyze_job.txt` retourne bien un JSON avec les champs `title`, `skills`, etc. | Agent Qualité         | 1 semaine     |
-| **Pas de tests**           | **Non testé** → Risque de régressions. | **Créer des tests unitaires** :<br>- Fichier `tests/` avec des inputs/sorties attendues pour chaque prompt.<br>- Script automatisé (ex: Python) pour valider les prompts.<br>- Intégrer dans une CI/CD (GitHub Actions). | Agent Performance     | 1 semaine     |
+---
+
+## **🚨 Problèmes Classés par Priorité**
+*(Ordre : Critique → Élevé → Moyen → Faible)*
 
 ---
 
-## **📌 Problèmes Secondaires (Priorité 3 : Optimisation)**
-| **Problème**               | **Impact**                          | **Solutions**                                                                                                                                                                                                                     | **Responsable**       | **Échéance** |
-|----------------------------|-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|--------------|
-| **Pas de standardisation des noms/versions** | Difficile à maintenir. | **Versionner les prompts** (ex: `v1_analyze_job.txt`).<br>**Centraliser la configuration** dans un fichier `config.json` (ex: température du modèle, format de sortie par défaut). | Agent Architecte      | 2 semaines    |
-| **Pas de dossier `examples/`** | Manque de clarté pour les utilisateurs. | **Ajouter un dossier `examples/`** avec :<br>- Des fichiers d’entrée (ex: `job_offer_1.txt`).<br>- Les sorties attendues (ex: `expected_output_analyze_job.json`). | Agent Documentation   | 2 semaines    |
-| **Pas de dépendances documentées** | Risque de problèmes d’exécution. | **Lister les dépendances** :<br>- Fichier `requirements.txt` (Python) ou `package.json` (Node.js) si le projet utilise des bibliothèques externes (ex: `langchain`, `pydantic`). | Agent Documentation   | 2 semaines    |
+### **🔴 Priorité Critique (À résoudre immédiatement)**
+| **ID** | **Problème** | **Impact** | **Fichiers/Composants concernés** | **Contradictions détectées** | **Solution Proposée** |
+|--------|--------------|------------|-----------------------------------|-------------------------------|------------------------|
+| **P1** | **3 fichiers de prompts vides** (`generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt`) | Blocage fonctionnel : dépôts inutilisables pour 75% des cas d’usage. | `ai/prompts/` | Aucun standard défini pour ces fichiers (vs `analyze_job.txt` en JSON strict). | **Remplir les fichiers** avec : <br> - **Rôle clair** (ex: `generate_pitch.txt` → générer un pitch pour un candidat). <br> - **Format de sortie aligné** (JSON, comme `analyze_job.txt`). <br> - **Exemples d’entrée/sortie** (dans un dossier `examples/`). <br> - **Supprimer les fichiers** si non prioritaires (éviter les fichiers vides en production). |
+| **P2** | **Absence totale de documentation** (pas de README, pas de métadonnées) | Impossibilité pour les contributeurs de comprendre l’objectif, les formats, ou les dépendances. | Dépôt entier | Tous les agents soulignent ce manque. | **Créer un `README.md`** avec : <br> - Objectif du dépôt (ex: "Prompts pour agents IA spécialisés dans l’analyse du marché tech/emploi"). <br> - **Tableau des prompts** : <br>   | Fichier | Rôle | Format Entrée | Format Sortie | Exemple | <br>   |--------|------|---------------|---------------|---------| <br>   | `analyze_job.txt` | Analyser une offre d’emploi | Texte brut | JSON | [Lien vers exemple] | <br> - **Bonnes pratiques** : <br>   - "Tous les prompts doivent retourner du JSON valide, sans markdown ni commentaires." <br>   - "Les entrées doivent être validées via un schéma JSON." <br> - **Dépendances** (si applicables, ex: Python 3.10+, bibliothèques comme `jsonschema`). |
+| **P3** | **Fichiers vides exposés = risque de sécurité** | Vulnérabilité potentielle (injection de contenu malveillant si référencés par des processus critiques). | `generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt` | Agent Sécurité vs Agent Architecture : les premiers veulent les supprimer, les seconds veulent les remplir. | **Solution hybride** : <br> 1. **Supprimer les fichiers vides** si non prioritaires dans les 2 semaines. <br> 2. **Sinon, les remplir immédiatement** avec un contenu par défaut sécurisé (ex: `"Ce prompt est en cours de développement. Ne pas utiliser en production."`). <br> 3. **Restreindre les permissions** (`chmod 600` ou ACLs pour limiter l’écriture). |
+| **P4** | **Pas de validation des entrées/sorties** | Risque d’injections JSON ou de sorties malformées (ex: `analyze_job.txt` attend du JSON mais aucune vérification). | `analyze_job.txt` (et futur autres prompts) | Agent Qualité vs Agent Sécurité : tous s’accordent sur le besoin de validation. | **Ajouter des schémas JSON** pour chaque prompt : <br> - Créer un dossier `ai/schemas/` avec : <br>   - `analyze_job_schema.json` (ex: `{ "type": "object", "properties": { "title": { "type": "string" }, "skills": { "type": "array" } }, "required": ["title"] }`). <br> - **Valider les sorties** via un script Python (ex: `validate_prompts.py` utilisant `jsonschema`). <br> - **Intégrer dans la CI/CD** (voir P7). |
 
 ---
 
-## **🔄 Contradictions Détectées**
-Aucune contradiction majeure entre les rapports. Tous les agents s’accordent sur :
-- **`analyze_job.txt` est bien conçu** (JSON valide, pas de markdown).
-- **Les 3 autres fichiers sont vides** et doivent être complétés.
-- **La documentation est manquante** (README, exemples, schémas de validation).
-
----
-
-## **📅 Roadmap Proposée**
-| **Phase**       | **Actions**                                                                 | **Durée**       | **Livrables**                                                                 |
-|-----------------|-----------------------------------------------------------------------------|-----------------|-------------------------------------------------------------------------------|
-| **Phase 1**     | Compléter les prompts vides + README.md                                    | 2-3 jours       | Fichiers `generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt` + README. |
-| **Phase 2**     | Ajouter schémas JSON + tests unitaires                                      | 3-5 jours       | Dossier `schemas/`, `tests/`, script de validation.                          |
-| **Phase 3**     | Versionnage + exemples + dépendances                                       | 1 semaine        | Fichiers versionnés, dossier `examples/`, `requirements.txt`.               |
-
----
----
-## **🎯 Recommandations Finale**
-1. **Priorité absolue** :
-   - **Remplir les prompts vides** (3 fichiers) et **créer un README.md** (blocage pour toute utilisation).
-   - **Standardiser le format** (tous les prompts doivent retourner du JSON valide, comme `analyze_job.txt`).
-
-2. **Validation et tests** :
-   - **Ajouter des schémas JSON** pour chaque prompt.
-   - **Créer des tests automatisés** (ex: script Python qui vérifie que `analyze_job.txt` retourne un JSON valide).
-
-3. **Documentation et exemples** :
-   - **Dossier `examples/`** avec des cas concrets.
-   - **Documenter les dépendances** (si le projet utilise des bibliothèques externes).
-
-4. **Architecture** :
-   - **Versionner les prompts** (ex: `v1_analyze_job.txt`).
-   - **Centraliser la configuration** (fichier `config.json`).
-
----
-**⚠️ Attention** : Sans résolution des **problèmes critiques (Priorité 1)**, le dépôt reste **inutilisable** pour 75% de ses fonctionnalités. **Agir immédiatement**.
+### **🟠 Priorité Élevée (À résoudre sous 1-2 semaines)**
+| **ID** | **Problème** | **Impact** | **Fichiers/Composants concernés** | **Contradictions détectées** | **Solution Proposée** |
+|--------|--------------|------------|-----------------------------------|-------------------------------|------------------------|
+| **P5** | **Manque de standardisation des prompts** | Incohérence future entre les prompts (ex: certains en JSON, d’autres en markdown). | `ai/prompts/` | Agent Qualité et Agent Architecture demandent une standardisation, mais aucun template n’est proposé. | **Créer un template unique** pour tous les prompts : <br> ```markdown <br> # [Nom du Prompt] <br> **Rôle** : [Description claire en 1 phrase] <br> **Entrée** : [Format attendu, ex: "Texte brut (offre d’emploi)"] <br> **Sortie** : [Format strict, ex: "JSON valide (schéma: `ai/schemas/[nom]_schema.json`)"] <br> **Exemple** : <br> ```input <br> [Exemple d’entrée] <br> ``` <br> ```output <br> { "exemple": "de sortie JSON" } <br> ``` <br> **Contraintes** : <br> - Pas de markdown dans les sorties. <br> - Longueur max: [X] tokens. <br> ``` <br> **Appliquer ce template** à tous les fichiers (y compris `analyze_job.txt` pour uniformité). |
+| **P6** | **Pas de tests ni d’exemples** | Impossibilité de valider la qualité des prompts ou de guider les utilisateurs. | Dépôt entier | Tous les agents (Qualité, DevOps, Performance) demandent des tests. | **Ajouter** : <br> 1. **Dossier `examples/`** : <br>    - `examples/analyze_job_input.txt` + `examples/analyze_job_output.json`. <br>    - Remplir pour les autres prompts une fois complétés. <br> 2. **Dossier `tests/`** : <br>    - Scripts Python pour valider : <br>      - La sortie est du JSON valide (via `json.loads()`). <br>      - La sortie respecte le schéma JSON (via `jsonschema`). <br>    - Exemple : <br>      ```python <br>      import json <br>      from jsonschema import validate <br>      def test_analyze_job(): <br>          with open("ai/prompts/analyze_job.txt") as f: <br>              prompt = f.read() <br>          # Simuler une entrée et vérifier la sortie <br>          output = call_llm(prompt, input="...")  # À implémenter <br>          assert json.loads(output)  # Vérifie JSON valide <br>          with open("ai/schemas/analyze_job_schema.json") as schema: <br>              validate(instance=json
 
 Roadmap:
-Voici une **feuille de route structurée en tickets**, avec priorités, estimations, dépendances, risques, métriques de succès, et parties prenantes. Les tickets sont organisés par **sprints** (itérations de 1 semaine) pour une exécution agile.
+Voici une **feuille de route structurée en tickets** pour résoudre les problèmes du dépôt `ai/prompts/`, avec priorités, efforts, dépendances, risques, métriques de succès et responsabilités.
+
+---
+
+```markdown
+# 📋 Feuille de Route – Dépôt `ai/prompts/`
+**Date :** 29 juin 2026
+**Responsable :** Product Owner Technique (Synthèse)
+**Objectif :** Rendre le dépôt **complet, standardisé, sécurisé et maintenable**.
 
 ---
 
 ---
 
----
-
-### **📌 Feuille de Route – Dépôt Prompts IA (Offres d'Emploi Tech)**
-**Objectif** : Rendre le dépôt **100% fonctionnel, testé et documenté** en 3 sprints.
-**Portée** : Complétion des prompts, validation, tests, documentation, et standardisation.
+## 🎯 **Tickets par Priorité**
 
 ---
 
----
-
-## **🚀 Sprint 1 (Semaine 1) – Résolution des Blocages Critiques**
-**Focus** : *Rendre le dépôt utilisable* (Priorité 1).
-
-| **ID** | **Ticket** | **Description** | **Priorité** | **Effort** | **Dépendances** | **Risques/Obstacles** | **Métriques de Succès** | **Parties Prenantes** | **Responsable** |
-|--------|------------|----------------|--------------|------------|------------------|------------------------|------------------------|------------------------|------------------|
-| **T1.1** | Compléter `generate_pitch.txt` | Créer un prompt pour générer un pitch personnalisé en JSON (ex: `{ "candidate": "...", "pitch": "..." }`). Inclure rôle, format de sortie, et 2 exemples. | **P1 (Critique)** | **2j** | Aucun | - Manque de spécifications métiers pour le pitch.<br>- Risque de format JSON incohérent. | - Fichier validé par l'équipe IA.<br>- JSON schématiquement valide. | Équipe IA, PO | Agent IA/Dev |
-| **T1.2** | Compléter `interview_prep.txt` | Prompt pour générer des questions/réponses d'entretien en JSON (ex: `{ "questions": [...], "answers": [...] }`). | **P1** | **2j** | Aucun | - Besoin de définir le scope (ex: questions techniques vs. comportementales). | - Fichier validé.<br>- Exemples cohérents. | Équipe IA, RH | Agent IA/Dev |
-| **T1.3** | Compléter `match_profile.txt` | Prompt pour matcher un profil candidat avec une offre (sortie: `{ "score": X, "matches": [...], "gaps": [...] }`). | **P1** | **2j** | Aucun | - Algorithme de matching à définir (simple vs. complexe). | - Fichier validé.<br>- Logique de matching documentée. | Équipe IA, PO | Agent IA/Dev |
-| **T1.4** | Créer `README.md` | Documenter : objectif du dépôt, description des 4 prompts (rôle, entrée/sortie), exemples basiques, et lien vers la doc technique. | **P1** | **1j** | T1.1, T1.2, T1.3 | - Risque de documentation incomplète. | - README validé par l'équipe et les utilisateurs finaux. | Équipe Doc, PO | Agent Documentation |
-| **T1.5** | Valider les prompts complétés | Vérifier que les 3 nouveaux prompts retournent du JSON valide (via un script manuel). | **P1** | **0.5j** | T1.1, T1.2, T1.3 | - Outils de validation non disponibles. | - 100% des prompts testés manuellement. | Équipe Qualité | Agent Qualité |
-
----
-**Livrables Sprint 1** :
-✅ 3 prompts complétés (`generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt`).
-✅ `README.md` avec documentation de base.
-✅ Validation manuelle des sorties JSON.
-
----
-
----
-
-## **🛠️ Sprint 2 (Semaine 2) – Qualité et Fiabilité**
-**Focus** : *Garantir la cohérence et la testabilité* (Priorité 2).
-
-| **ID** | **Ticket** | **Description** | **Priorité** | **Effort** | **Dépendances** | **Risques/Obstacles** | **Métriques de Succès** | **Parties Prenantes** | **Responsable** |
-|--------|------------|----------------|--------------|------------|------------------|------------------------|------------------------|------------------------|------------------|
-| **T2.1** | Créer des schémas JSON | Définir un schéma JSON pour chaque prompt (ex: `schemas/analyze_job_schema.json`) utilisant `json-schema`. | **P2** | **2j** | T1.1-T1.3 | - Apprentissage de `json-schema` si non maîtrisé. | - 100% des prompts ont un schéma valide.<br>- Schémas testés avec un outil comme [JSON Schema Validator](https://www.jsonschemavalidator.net/). | Équipe Qualité, Dev | Agent Qualité |
-| **T2.2** | Implémenter un validateur | Script Python (`validate_prompts.py`) pour valider les sorties des prompts contre leurs schémas. | **P2** | **1j** | T2.1 | - Intégration complexe si schémas mal définis. | - Script exécuté avec succès sur tous les prompts. | Équipe Dev | Agent Performance |
-| **T2.3** | Créer des tests unitaires | Dossier `tests/` avec :<br>- 1 fichier par prompt (ex: `test_analyze_job.py`).<br>- Tests pour entrées/sorties attendues. | **P2** | **3j** | T1.1-T1.3, T2.1 | - Difficulté à couvrir tous les cas d'usage.<br>- Maintenance future des tests. | - 100% des prompts couverts par des tests.<br>- 0 régression détectée. | Équipe Qualité | Agent Performance |
-| **T2.4** | Intégrer la validation en CI/CD | Configurer GitHub Actions pour exécuter `validate_prompts.py` et les tests à chaque commit. | **P2** | **1j** | T2.2, T2.3 | - Configuration CI/CD complexe.<br>- Coût des runners GitHub. | - Pipeline CI/CD fonctionnel.<br>- 0 échec en production. | Équipe DevOps | Agent DevOps |
-
----
-**Livrables Sprint 2** :
-✅ Schémas JSON pour tous les prompts.
-✅ Script de validation et tests unitaires.
-✅ Pipeline CI/CD opérationnel.
+### **🔴 Priorité Critique (À traiter sous 48h)**
+#### **📌 [T1] Compléter les prompts vides**
+- **Description :** Remplir les 3 fichiers vides (`generate_pitch.txt`, `interview_prep.txt`, `match_profile.txt`) avec :
+  - Un **rôle clair** (ex: `generate_pitch.txt` → "Générer un pitch personnalisé pour un candidat").
+  - Un **format de sortie JSON** aligné sur `analyze_job.txt`.
+  - Un **exemple d’entrée/sortie** (à placer dans `examples/`).
+- **Effort :** 3 jours (1 jour par fichier + validation).
+- **Dépendances :**
+  - Aucune (peut être traité en parallèle de T2).
+  - **Bloque** T5 (standardisation) et T7 (tests).
+- **Risques/Obstacles :**
+  - **Risque de blocage** si les parties prenantes ne valident pas rapidement les rôles des prompts.
+  - **Obstacle** : Manque de clairvoyance sur les cas d’usage métiers (ex: format attendu pour `match_profile.txt`).
+- **Métriques de succès :**
+  - 3 fichiers **non vides**, avec un contenu **fonctionnel et validé**.
+  - Exemples d’entrée/sortie **disponibles et testés**.
+- **Parties prenantes :**
+  - **Responsable :** Équipe Dev (Rédacteurs de prompts).
+  - **Validateurs :** Équipe Métier (pour les cas d’usage) + Sécurité (pour les formats).
+  - **Contributeurs :** Agent Qualité (validation des exemples).
 
 ---
 
+#### **📌 [T2] Créer un README.md complet**
+- **Description :**
+  - Documenter :
+    - **Objectif du dépôt** (ex: "Prompts pour agents IA spécialisés dans l’analyse du marché tech/emploi").
+    - **Tableau des prompts** (fichier | rôle | format entrée | format sortie | exemple).
+    - **Bonnes pratiques** (ex: "Tous les prompts doivent retourner du JSON valide").
+    - **Dépendances** (ex: Python 3.10+, `jsonschema`).
+    - **Processus de contribution** (ex: "Les PR doivent inclure un exemple et un test").
+- **Effort :** 2 jours.
+- **Dépendances :**
+  - **Dépend de** T1 (pour lister les prompts complétés).
+  - **Bloque** T3 (sécurisation) et T6 (exemples).
+- **Risques/Obstacles :**
+  - **Risque de retard** si les parties prenantes ne fournissent pas les informations métiers.
+  - **Obstacle** : Alignement sur le ton et le niveau de détail (trop technique vs. trop haut niveau).
+- **Métriques de succès :**
+  - README **validé par l’équipe Dev et Métier**.
+  - 100% des contributeurs capables de **comprendre et utiliser le dépôt** sans assistance.
+- **Parties prenantes :**
+  - **Responsable :** Product Owner.
+  - **Validateurs :** Équipe Dev + Métier + Sécurité.
+  - **Contributeurs :** Agent Documentation.
+
 ---
 
-## **📚 Sprint 3 (Semaine 3) – Optimisation et Documentation Avancée**
-**Focus** : *Améliorer la maintenabilité et l'expérience utilisateur* (Priorité 3).
+#### **📌 [T3] Sécuriser les fichiers vides (solution temporaire)**
+- **Description :**
+  1. **Supprimer** les fichiers vides si non prioritaires (décision à prendre sous 48h).
+  2. **Sinon**, les remplir avec un message par défaut :
+     ```text
+     {"error": "Ce prompt est en cours de développement. Ne pas utiliser en production."}
+     ```
+  3. **Restreindre les permissions** (`chmod 600` ou ACLs).
+- **Effort :** 1 jour.
+- **Dépendances :**
+  - **Dépend de** T1 (si les fichiers ne sont pas complétés à temps).
+- **Risques/Obstacles :**
+  - **Risque de sécurité** si les fichiers restent vides et accessibles.
+  - **Obstacle** : Désaccord entre Sécurité (suppression) et Architecture (remplissage).
+- **Métriques de succès :**
+  - Aucun fichier vide **exposé en production**.
+  - Permissions **restreintes** (vérifié via `ls -l`).
+- **Parties prenantes :**
+  - **Responsable :** Équipe Sécurité.
+  - **Validateurs :** Product Owner.
+  - **Contributeurs :** Agent DevOps.
 
-| **ID** | **Ticket** | **Description** | **Priorité** | **Effort** | **Dépendances** | **Risques/Obstacles** | **Métriques de Succès** | **Parties Prenantes** | **Responsable** |
-|--------|------------|----------------|--------------|------------|------------------|------------------------|------------------------|------------------------|------------------|
-| **T3.1** | Versionner les prompts | Renommer les fichiers avec un préfixe de version (ex: `v1_analyze_job.txt`). | **P3** | **0.5j** | Aucun | - Gestion des versions futures. | - Tous les prompts versionnés.<br>- Pas de rupture de compatibilité. | Équipe Dev | Agent Architecte |
-| **T3.2** | Centraliser la configuration | Créer `config.json` pour stocker :<br>- Paramètres par défaut (ex: `temperature: 0.7`).<br>- Chemins des schémas. | **P3** | **1j** | T2.1 | - Conflits si configuration mal gérée. | - `config.json` utilisé par tous les scripts. | Équipe Dev | Agent Architecte |
-| **T3.3** | Ajouter un dossier `examples/` | Inclure :<br>- 2-3 exemples d'entrée par prompt (ex: `examples/job_offer_1.txt`).<br>- Sorties attendues au format JSON. | **P3** | **2j** | T1.1-T1.3 | - Exemples non représentatifs. | - 100% des prompts ont des exemples.<br>- Exemples validés par les utilisateurs. | Équipe Doc | Agent Documentation |
-| **T3.4** | Documenter les dépendances | Créer `requirements.txt` (Python) ou `package.json` (Node.js) avec les bibliothèques nécessaires (ex: `jsonschema`, `pytest`). | **P3** | **0.5j** | T2.2, T2.3 | - Oublis de dépendances. | - Toutes les dépendances listées.<br>- Environnement reproductible. | Équipe Dev | Agent Documentation |
-| **T3.5** | Rédiger `ARCHITECTURE.md` |
+---
+
+#### **📌 [T4] Ajouter des schémas JSON pour validation**
+- **Description :**
+  - Créer un dossier `ai/schemas/` avec :
+    - `analyze_job_schema.json` (schéma pour `analyze_job.txt`).
+    - Schémas pour les autres prompts une fois complétés (T1).
+  - **Valider les sorties** via un script Python (`validate_prompts.py` utilisant `jsonschema`).
+- **Effort :** 3 jours.
+- **Dépendances :**
+  - **Dépend de** T1 (pour les schémas des nouveaux prompts).
+  - **Bloque** T7 (CI/CD).
+- **Risques/Obstacles :**
+  - **Risque de schémas incomplets** si les formats ne sont pas clairement définis.
+  - **Obstacle** : Manque d’expertise en `jsonschema` dans l’équipe.
+- **Métriques de succès :**
+  - 100% des prompts **validés par un schéma JSON**.
+  - Script de validation **intégré et testé**.
+- **Parties prenantes :**
+  - **Responsable :** Équipe Dev.
+  - **Validateurs :** Équipe Qualité + Sécurité.
+  - **Contributeurs :** Agent Architecture.
+
+---
+
+---
+
+### **🟠 Priorité Élevée (À traiter sous 1-2 semaines)**
+#### **📌 [T5] Standardiser les prompts avec un template unique**
+- **Description :**
+  - Créer un **template Markdown** pour tous les prompts (exemple ci-dessous) et l’appliquer à :
+    - `analyze_job.txt` (pour uniformité).
+    - Les prompts complétés (T1).
+  - Template :
+    ```markdown
+    # [Nom du Prompt]
+    **Rôle** : [Description claire en 1 phrase]
+    **Entrée** : [Format attendu, ex: "Texte brut (offre d’emploi)"]
+    **Sortie** : JSON valide (schéma: `ai/schemas/[nom]_schema.json`)
+    **Exemple** :
+    ```input
+    [Exemple d’entrée]
+    ```
+    ```output
+    { "exemple": "de sortie JSON" }
+    ```
+    **Contraintes** :
+    - Pas de markdown dans les sorties.
+    - Longueur max: 2048 tokens.
+    ```
+- **Effort :** 2 jours.
+- **Dépendances :**
+  - **Dépend de** T1 (prompts complétés) et T4 (schémas).
+- **Risques/Obstacles :**
+  - **Risque d’incohérence** si le template n’est pas respecté.
+  - **Obstacle** : Résistance au changement de format pour `analyze_job.txt`.
+- **Métriques de succès :**
+  - 100% des prompts **conformes au template**.
+  - **0 erreur** de format détectée lors des tests.
+- **Parties prenantes :**
+  - **Responsable :** Équipe Dev.
+  - **Validateurs :** Agent Qualité.
+  - **Contributeurs :** Rédacteurs de prompts.
+
+---
+
+#### **📌 [T6] Ajouter des exemples et des tests unitaires**
+- **Description :**
+  - **Dossier `examples/` :**
+    - `analyze_job_input.txt` + `analyze_job_output.json` (déjà existant ? À vérifier).
+    - Exemples pour les autres prompts (une fois complétés via T1).
+  - **Dossier `tests/` :**
+    - Scripts Python pour :
+      - Vérifier que la sortie est du **JSON valide** (`json.loads()`).
+      - Vérifier que la sortie **respecte le schéma** (`jsonschema`).
+    - Exemple de test :
+      ```python
+      import json
+      from jsonschema import validate
+
+      def test_analyze_job():
+          with open("ai/prompts/analyze_job.txt") as f:
+              prompt = f.read()
+          output = call_llm(prompt, input="...")  # À implémenter
+         
