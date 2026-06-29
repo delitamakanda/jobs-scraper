@@ -108,6 +108,11 @@ def orchestrate(repo_summary: str):
 
         Rapports des agents :
         {reports}
+
+        Fournis un rapport final complet et structuré en markdown.
+
+        Vérifier que le rapport final contient tout ce qui est nécessaire pour que le Product Owner puisse créer une feuille de route claire et concise. Pas de phrases incomplètes, pas de phrases vagues, pas de phrases génériques. Pas de phrases qui ne sont pas directement liées au dépôt analysé.
+
         """
     )
     return final_report
@@ -117,7 +122,6 @@ def make_roadmap(final_report: str):
         agent_id=PRODUCT_OWNER_AGENT_ID,
         inputs=f"""
         Tu es un Product Owner. Tu as reçu un rapport final d'analyse d'un dépôt.
-        
         Produis une feuille de route claire et concise.
 
         Découpe en tickets.
@@ -167,8 +171,7 @@ if __name__ == "__main__":
     repo_summary = build_repo_summary(repo_path)
     final_report = orchestrate(repo_summary)
     roadmap = make_roadmap(final_report)
-    # output the final report and roadmap to a markdown file
-    output_file = "final_report.md"
+    output_file = f"final_report_{repo_path.replace('./', '').replace('/', '_')}.md"
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(final_report)
         f.write("\n\n")
