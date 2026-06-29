@@ -1,14 +1,19 @@
 import os
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
 from dotenv import load_dotenv
 
 from mistralai.client import Mistral
+from mistralai.client.errors.sdkerror import SDKError
 
 from logging import getLogger
 
 logger = getLogger(__name__)
+
+MAX_RETRIES = 4
+INITIAL_BACKOFF = 2  # seconds
 
 
 AGENTS = {
@@ -61,26 +66,32 @@ def run_specialist_agent(name: str, agent_id: str, repo_summary: str) -> tuple[s
 
 
 def call_mistral_agent(agent_id, inputs) -> str:
-    print(f"Calling Mistral agent with ID: {agent_id}")
-    print(f"Input to agent: {inputs}")
     load_dotenv()
     api_key = os.getenv("MISTRAL_API_KEY")
     if not api_key:
         raise ValueError("MISTRAL_API_KEY is not set in the environment variables.")
-
-    client = Mistral(api_key=api_key)
-
     if not agent_id:
         raise ValueError(f"Agent '{agent_id}' not found.")
 
-    response = client.beta.conversations.start(agent_id=agent_id, agent_version="latest", inputs=inputs)
-    return _extract_text(response)
+    client = Mistral(api_key=api_key)
+
+    for attempt in range(MAX_RETRIES):
+        try:
+            response = client.beta.conversations.start(agent_id=agent_id, agent_version="latest", inputs=inputs)
+            return _extract_text(response)
+        except SDKError as e:
+            is_retryable = e.status_code in (429, 500, 502, 503, 504)
+            if not is_retryable or attempt == MAX_RETRIES - 1:
+                raise
+            wait = INITIAL_BACKOFF * (2 ** attempt)
+            logger.warning(f"Agent {agent_id}: got {e.status_code}, retrying in {wait}s (attempt {attempt + 1}/{MAX_RETRIES})")
+            time.sleep(wait)
 
 
 def orchestrate(repo_summary: str):
     reports_by_agent = {}
 
-    with ThreadPoolExecutor(max_workers=len(AGENTS)) as executor:
+    with ThreadPoolExecutor(max_workers=3) as executor:
         future_to_agent = {
             executor.submit(run_specialist_agent, name, agent_id, repo_summary): name
             for name, agent_id in AGENTS.items()
@@ -117,6 +128,10 @@ def orchestrate(repo_summary: str):
 
         Vérifier que le rapport final contient tout ce qui est nécessaire pour que le Product Owner puisse créer une feuille de route claire et concise. Pas de phrases incomplètes, pas de phrases vagues, pas de phrases génériques. Pas de phrases qui ne sont pas directement liées au dépôt analysé.
 
+        Vérifie que le fichier final est un markdown valide.
+
+        Vérifie que les phrases ne sont pas incomplètes, pas vagues, pas génériques, et qu'elles sont directement liées au dépôt analysé.
+
         """
     )
     return final_report
@@ -140,7 +155,11 @@ def make_roadmap(final_report: str):
 
         Liste les parties prenantes et les responsabilités pour chaque ticket.
 
-        Vérifie que les phrases sont complètes, claires et concises. Pas de phrases vagues, pas de phrases génériques. Pas de phrases qui ne sont pas directement liées au dépôt analysé.
+        Vérifie que les phrases sont complètes, claires et concises. Pas de phrases vagues, pas de phrases génériques. Pas de phrases qui ne sont pas directement liées au dépôt analysé. 
+
+        Vérifie que le fichier final est un markdown valide.
+
+        Sans phrases incomplètes, sans phrases vagues, sans phrases génériques, sans phrases qui ne sont pas directement liées au dépôt analysé.
 
         Rapport final :
         {final_report}
