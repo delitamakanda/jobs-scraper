@@ -140,6 +140,8 @@ def make_roadmap(final_report: str):
 
         Liste les parties prenantes et les responsabilités pour chaque ticket.
 
+        Vérifie que les phrases sont complètes, claires et concises. Pas de phrases vagues, pas de phrases génériques. Pas de phrases qui ne sont pas directement liées au dépôt analysé.
+
         Rapport final :
         {final_report}
         """
