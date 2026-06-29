@@ -17,6 +17,10 @@ AGENTS = {
     "qualité": "ag_019f12956bfc77928ced73a86ff37886",
     "documentation": "ag_019f1286093a7580a5c71169487060f3",
     "mentor": "ag_019f1296d99872e284a2dfa79baa0c8c",
+    "sécurité": "ag_019f13cd13d67262a519c7909dd0e63d",
+    "accessibilité": "ag_019f13ce4d8976a99c452ce7347bc919",
+    "devops": "ag_019f13cf472777b887acc7d241ec7bd4",
+    "ui/ux": "ag_019f13d0b1d370c1aad0f9b89397a6fa",
 }
 
 ORCHESTRATOR_AGENT_ID = "ag_019f12a4060a77d8b5cbc0b76e8873c6"
