@@ -226,6 +226,71 @@ python manage.py migrate
 - The import flow immediately runs AI analysis, so invalid AI credentials can cause URL import to fail after parsing.
 - `requirements-dev.txt` is currently empty; add linting/type-checking/test tooling there as the development workflow grows.
 
+## Architecture diagram
+
+```mermaid
+graph TB
+    subgraph Frontend["Frontend (Angular 21)"]
+        direction TB
+        FE_Auth["Auth feature\n(login / register)"]
+        FE_Jobs["Jobs feature\n(list / import / analyze)"]
+        FE_Applications["Applications feature\n(status tracking)"]
+        FE_Profile["Profile feature\n(candidate data)"]
+        FE_Dashboard["Dashboard feature"]
+        FE_Core["Core\n(API service · auth guard\n· layout · state)"]
+        FE_Core --> FE_Auth & FE_Jobs & FE_Applications & FE_Profile & FE_Dashboard
+    end
+
+    subgraph Backend["Backend (Django 6 + DRF)"]
+        direction TB
+        API_Auth["/api/auth/\naccounts app\n(token auth)"]
+        API_Jobs["/api/jobs/\njobs app\n(CRUD · import-url · analyze · match)"]
+        API_Applications["/api/applications/\napplications app"]
+        API_Profile["/api/profile/\nprofiles app"]
+        API_AI["/api/ai/\nai app"]
+
+        subgraph AI_Layer["AI layer (apps/ai)"]
+            LLM_Client["LLMClient\n(OpenAI SDK)"]
+            Analyzer["JobAnalyzer"]
+            Matcher["Matcher"]
+            ContentGen["ContentGenerator"]
+            LLM_Client --> Analyzer & Matcher & ContentGen
+        end
+
+        subgraph Import_Layer["Import layer (apps/jobs/services)"]
+            Importer["JobImporter"]
+            Fetcher["HTMLFetcher"]
+            Detector["SourceDetector"]
+            LinkedIn["LinkedInParser"]
+            HelloWork["HelloWorkParser"]
+            Generic["GenericParser"]
+            Fetcher --> Detector
+            Detector --> LinkedIn & HelloWork & Generic
+            Importer --> Fetcher
+            Importer --> Analyzer
+        end
+
+        API_Jobs --> Importer & Analyzer & Matcher
+        API_AI --> LLM_Client
+    end
+
+    subgraph Storage["Storage"]
+        SQLite[("SQLite\n(development)")]
+        PostgreSQL[("PostgreSQL Azure\n(production)")]
+    end
+
+    subgraph External["External services"]
+        LLM_API["OpenAI-compatible LLM\n(Tongyi / Qwen)"]
+        JobSites["Job sites\n(LinkedIn · HelloWork · generic)"]
+    end
+
+    Frontend -- "HTTP + Token Auth" --> Backend
+    LLM_Client -- "HTTPS" --> LLM_API
+    Fetcher -- "HTTPS" --> JobSites
+    Backend -- "ORM" --> SQLite
+    Backend -- "ORM" --> PostgreSQL
+```
+
 ## License
 
 This project is licensed under the terms in [`LICENSE`](LICENSE).
