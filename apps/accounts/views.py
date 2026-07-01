@@ -5,6 +5,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
@@ -29,6 +30,8 @@ def user_payload(user):
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
 
     def post(self, request):
         enforce_csrf(request)
@@ -43,6 +46,8 @@ class LoginView(APIView):
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
 
     def post(self, request):
         enforce_csrf(request)
@@ -83,6 +88,7 @@ class CsrfView(APIView):
     """
 
     permission_classes = [AllowAny]
+    throttle_classes = []
 
     def get(self, request):
         return Response({'csrfToken': get_token(request)}, status=status.HTTP_200_OK)
