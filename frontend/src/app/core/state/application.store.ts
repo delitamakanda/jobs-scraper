@@ -33,7 +33,7 @@ export class ApplicationStore {
 
   readonly savedApplications = computed(() => this._applications().filter((application) => application.status === 'SAVED'));
 
-  readonly interviewApplications = computed(() => this._applications().filter((application) => application.status === 'INTERVIEW'));
+  readonly interviewApplications = computed(() => this._applications().filter((application) => application.status === 'INTERVIEWED'));
 
   fetchApplications(): void {
     this._loading.set(true);

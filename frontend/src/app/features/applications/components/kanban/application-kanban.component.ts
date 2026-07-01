@@ -35,7 +35,7 @@ export class ApplicationKanbanComponent {
       description: 'Candidature envoyée',
     },
     {
-      status: 'INTERVIEW',
+      status: 'INTERVIEWED',
       title: 'Interview',
       description: 'Entretien programmé',
     },

@@ -1,6 +1,6 @@
 import { JobOffer } from "./job.model";
 
-export type ApplicationStatus = 'SAVED' | 'APPLIED' | 'INTERVIEW' | 'OFFER' | 'REJECTED';
+export type ApplicationStatus = 'SAVED' | 'APPLIED' | 'INTERVIEWED' | 'OFFER' | 'REJECTED';
 
 export interface Application {
     id: number;
