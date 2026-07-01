@@ -12,9 +12,6 @@ import { Router, RouterLink } from '@angular/router';
     RouterLink,
     ...MATERIAL_IMPORTS,
   ],
-  providers: [
-    AuthStore,
-  ],
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.css'],
 })
