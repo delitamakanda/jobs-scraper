@@ -1,17 +1,26 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { AUTH_TOKEN_KEY } from '../state/auth.store';
+import { inject } from '@angular/core';
+import { CsrfService } from './csrf.service';
 
+const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
+
+/**
+ * - Sends the httpOnly auth cookie with every request (`withCredentials`),
+ *   including cross-site in production.
+ * - Attaches the CSRF token (`X-CSRFToken`) on state-changing requests for the
+ *   double-submit protection. No `Authorization` header, no localStorage.
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const acces_token = localStorage.getItem(AUTH_TOKEN_KEY);
+  const csrf = inject(CsrfService);
 
-  if (!acces_token) {
-    return next(req);
+  let authReq = req.clone({ withCredentials: true });
+
+  if (!SAFE_METHODS.has(req.method.toUpperCase())) {
+    const token = csrf.current();
+    if (token) {
+      authReq = authReq.clone({ setHeaders: { 'X-CSRFToken': token } });
+    }
   }
-  
-  const authReq = req.clone({
-    setHeaders: {
-      Authorization: `Token ${acces_token}`,
-    },
-  });
+
   return next(authReq);
 };

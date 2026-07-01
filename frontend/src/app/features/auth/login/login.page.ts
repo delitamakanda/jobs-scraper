@@ -6,9 +6,6 @@ import { MATERIAL_IMPORTS } from '../../../shared/ui/material.imports';
 
 @Component({
   selector: 'app-login',
-  providers: [
-    AuthStore,
-  ],
   imports: [
     ReactiveFormsModule,
     RouterLink,

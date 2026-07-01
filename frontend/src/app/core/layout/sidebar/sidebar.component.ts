@@ -8,9 +8,6 @@ import { MATERIAL_IMPORTS } from '../../../shared/ui/material.imports';
   imports: [RouterLink, RouterLinkActive, ...MATERIAL_IMPORTS],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
-  providers: [
-    AuthStore,
-  ],
 })
 export class SidebarComponent {
   private readonly router = inject(Router);

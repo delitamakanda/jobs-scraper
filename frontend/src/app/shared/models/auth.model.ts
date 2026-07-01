@@ -6,3 +6,11 @@ export interface RegisterUser {
     first_name: string;
     last_name: string;
 }
+
+export interface AuthUser {
+    id: number;
+    username: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+}

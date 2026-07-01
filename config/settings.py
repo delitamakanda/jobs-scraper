@@ -155,12 +155,49 @@ CORS_ALLOW_CREDENTIALS = True
 # Rest Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Primary: token read from an httpOnly cookie (browser SPA).
+        'apps.accounts.authentication.CookieTokenAuthentication',
+        # Fallback: token in the Authorization header (non-browser/API clients).
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+
+# --- Cookie-based auth token + CSRF ---------------------------------------
+def _env_bool(name, default):
+    return os.getenv(name, str(default)).lower() in ('1', 'true', 'yes', 'on')
+
+
+# In production the SPA (e.g. https://delitamakanda.github.io) and this API
+# (e.g. https://api.careeragent.dev) are served from different sites, so the
+# auth/CSRF cookies must be `SameSite=None; Secure`. In local development
+# (same host over http) `SameSite=Lax` without Secure is used instead.
+# Set CROSS_SITE_COOKIES=1 (and serve the API over HTTPS) in production.
+CROSS_SITE_COOKIES = _env_bool('CROSS_SITE_COOKIES', not DEBUG)
+
+# httpOnly cookie that carries the DRF auth token.
+AUTH_COOKIE_NAME = os.getenv('AUTH_COOKIE_NAME', 'auth_token')
+AUTH_COOKIE_MAX_AGE = int(os.getenv('AUTH_COOKIE_MAX_AGE', 60 * 60 * 24 * 14))  # 14 days
+AUTH_COOKIE_DOMAIN = os.getenv('AUTH_COOKIE_DOMAIN') or None
+AUTH_COOKIE_PATH = '/'
+AUTH_COOKIE_SAMESITE = 'None' if CROSS_SITE_COOKIES else 'Lax'
+AUTH_COOKIE_SECURE = _env_bool('AUTH_COOKIE_SECURE', CROSS_SITE_COOKIES)
+
+# CSRF double-submit. The token is handed to the SPA in the body of
+# /api/auth/csrf/ (a cross-domain SPA cannot read the API's cookie), echoed
+# back in the X-CSRFToken header, and validated against the csrftoken cookie
+# the browser sends automatically. The cookie must be JS-visible.
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'None' if CROSS_SITE_COOKIES else 'Lax'
+CSRF_COOKIE_SECURE = _env_bool('CSRF_COOKIE_SECURE', CROSS_SITE_COOKIES)
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
+    'https://delitamakanda.github.io',
+]
 
 # AI settings
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'your_openai_api_key')
