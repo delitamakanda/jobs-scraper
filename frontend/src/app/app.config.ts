@@ -4,18 +4,19 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { switchMap } from 'rxjs';
-import { authInterceptor } from './core/auth/auth.interceptor';
-import { API_CONFIG_TOKEN } from './core/config/injection-token';
-import { API_CONFIG } from './core/config/api.config';
-import { CsrfService } from './core/auth/csrf.service';
-import { AuthStore } from './core/state/auth.store';
+import { authInterceptor } from '@app/core/auth/auth.interceptor';
+import { API_CONFIG_TOKEN } from '@app/core/config/injection-token';
+import { API_CONFIG } from '@app/core/config/api.config';
+import { CsrfService } from '@app/core/auth/csrf.service';
+import { AuthStore } from '@app/core/state/auth.store';
+import { loadingInterceptor } from '@app/core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideZonelessChangeDetection(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
     { provide: API_CONFIG_TOKEN, useValue: API_CONFIG },
     // Fetch a CSRF token, then hydrate the auth session from the httpOnly
     // cookie before the app renders, so route guards see the correct state.
