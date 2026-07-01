@@ -10,13 +10,14 @@ import { API_CONFIG } from '@app/core/config/api.config';
 import { CsrfService } from '@app/core/auth/csrf.service';
 import { AuthStore } from '@app/core/state/auth.store';
 import { loadingInterceptor } from '@app/core/interceptors/loading.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideZonelessChangeDetection(),
-    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor, errorInterceptor])),
     { provide: API_CONFIG_TOKEN, useValue: API_CONFIG },
     // Fetch a CSRF token, then hydrate the auth session from the httpOnly
     // cookie before the app renders, so route guards see the correct state.
