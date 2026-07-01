@@ -1,10 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-
-interface ErrorApiResponse {
-  message: string;
-  status: number;
-  error: string;
-}
+import { ErrorApiResponse } from '@app/core/models/api-error.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +7,6 @@ interface ErrorApiResponse {
 export class ErrorService {
   private errorSignal = signal<ErrorApiResponse | null>(null);
   handleError(error: ErrorApiResponse): void {
-    // Implement your error handling logic here
     console.error('An error occurred:', error);
     this.errorSignal.set(error);
   }
