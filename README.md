@@ -18,7 +18,7 @@ Django REST API for collecting job offers, extracting job details from URLs, and
 - Django REST Framework
 - SQLite for local development
 - Requests, BeautifulSoup, and lxml for scraping/parsing
-- OpenAI Python SDK configured for Tongyi/Qwen-compatible endpoints
+- OpenAI Python SDK endpoints
 
 ## Project layout
 
@@ -68,9 +68,8 @@ Django REST API for collecting job offers, extracting job details from URLs, and
 4. Configure environment variables for AI-backed analysis:
 
    ```bash
-   export TONGYI_API_KEY=your_api_key
-   export TONGYI_API_URL=https://your-openai-compatible-endpoint/v1
-   export TONGYI_MODEL=qwen-plus
+   export OPENAI_API_KEY=your_api_key
+   export OPENAI_MODEL=qwen-plus
    ```
 
    The settings module has development defaults for these values, but real analysis calls require valid credentials.
