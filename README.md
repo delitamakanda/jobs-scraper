@@ -41,7 +41,7 @@ Django REST API for collecting job offers, extracting job details from URLs, and
 ## Prerequisites
 
 - Python 3.14 or newer.
-- A Tongyi/Qwen-compatible API key and base URL if you want to use job analysis or URL import, because imports call the analyzer after parsing.
+- A OpenAI API key and base URL if you want to use job analysis or URL import, because imports call the analyzer after parsing.
 
 ## Quick start
 
