@@ -1,0 +1,99 @@
+# Boucle de revue : dans une pull request, commente `@claude …` (commentaire
+# général, commentaire de ligne ou revue) pour que l'agent applique tes retours
+# sur la branche de la PR. Seules les personnes ayant accès en écriture au
+# dépôt peuvent déclencher l'agent.
+name: Agent – retours de revue
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+
+jobs:
+  respond:
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude'))
+    runs-on: ubuntu-latest
+    environment: claude
+    timeout-minutes: 60
+    concurrency:
+      group: agent-review-${{ github.event.issue.number || github.event.pull_request.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      actions: read
+      id-token: write
+    env:
+      PLAYWRIGHT_MCP_VERSION: '0.0.84'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Se placer sur la branche de la PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          R: ${{ github.repository }}
+          PR: ${{ github.event.issue.number || github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          read -r head_repo head_ref < <(gh api "repos/$R/pulls/$PR" --jq '"\(.head.repo.full_name) \(.head.ref)"')
+          # Le code de la PR va être installé et exécuté avec les secrets de l'environnement `claude` :
+          # on refuse les PR venant d'un fork.
+          if [ "$head_repo" != "$R" ]; then
+            echo "::error::PR #$PR issue d'un fork ($head_repo) : agent non lancé."
+            exit 1
+          fi
+          git fetch --depth=50 origin "+refs/heads/$head_ref:refs/remotes/origin/$head_ref"
+          git checkout -B "$head_ref" "origin/$head_ref"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: 'pip'
+
+      - name: Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          npm ci --prefix frontend
+
+      - name: Installer Playwright MCP et Chromium
+        run: |
+          dir="$RUNNER_TEMP/playwright-mcp"
+          npm install --prefix "$dir" --no-audit --no-fund "@playwright/mcp@$PLAYWRIGHT_MCP_VERSION"
+          echo "$dir/node_modules/.bin" >> "$GITHUB_PATH"
+          "$dir/node_modules/.bin/playwright" install-deps chromium
+          "$dir/node_modules/.bin/playwright-mcp" install-browser chromium
+
+      - name: Démarrer l'app (API Django + ng serve)
+        run: bash scripts/agent/start-app.sh
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          additional_permissions: |
+            actions: read
+          claude_args: |
+            --model ${{ vars.AGENT_MODEL || 'sonnet' }}
+            --max-turns 80
+            --mcp-config .github/agent/mcp.json
+            --append-system-prompt "Respecte CLAUDE.md et AGENTS.md. L'app tourne déjà : frontend sur http://localhost:4200 (ng serve recompile à chaque modification), API Django sur http://localhost:8000/api (runserver recharge à chaque modification). Compte de test dans .agent-out/test-user.md : ne recopie jamais le mot de passe. Vérifie toute modification d'UI dans le navigateur avec les outils mcp__playwright (émulation iPhone 13), en ne naviguant que vers l'app locale. Pas de clé OpenAI ici : dans les tests, simule LLMClient (unittest.mock) au lieu d'appeler le modèle. Tout changement de modèle s'accompagne d'une migration (bash scripts/agent/run.sh makemigrations). Avant de pousser, fais passer bash scripts/agent/run.sh all et bash scripts/agent/format-changed.sh --check. Ne modifie jamais .github/. Réponds en français."
+            --allowedTools "Skill,Bash(bash scripts/agent/run.sh:*),Bash(bash scripts/agent/format-changed.sh:*),mcp__playwright"
+            --disallowedTools "mcp__playwright__browser_run_code_unsafe,mcp__playwright__browser_evaluate,mcp__playwright__browser_file_upload"
