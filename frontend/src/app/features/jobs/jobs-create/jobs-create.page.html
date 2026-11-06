@@ -1,53 +1,86 @@
 <section class="max-w-3xl space-y-6">
   <div>
-    <h2 class="text-3xl font-bold">Ajouter une offre</h2>
-    <p class="text-zinc-500">
-      Colle une fiche de poste, l'agent fera le tri.
-    </p>
+    <h1 class="text-3xl font-bold">Ajouter une offre</h1>
+    <p class="text-zinc-600">Colle une fiche de poste, l'agent fera le tri.</p>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 rounded-2xl bg-white p-6 shadow-sm">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    class="space-y-4 rounded-2xl bg-white p-6 shadow-sm"
+  >
     <div>
-      <label class="text-sm font-medium">Titre</label>
-      <input formControlName="title"
-              class="mt-2 w-full rounded-xl border px-4 py-3" />
+      <label for="job-title" class="text-sm font-medium">Titre</label>
+      <input
+        id="job-title"
+        formControlName="title"
+        required
+        aria-required="true"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+      />
     </div>
 
     <div>
-      <label class="text-sm font-medium">Entreprise</label>
-      <input formControlName="company"
-              class="mt-2 w-full rounded-xl border px-4 py-3" />
+      <label for="job-company" class="text-sm font-medium">Entreprise</label>
+      <input
+        id="job-company"
+        formControlName="company"
+        required
+        aria-required="true"
+        autocomplete="organization"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+      />
     </div>
 
     <div>
-      <label class="text-sm font-medium">URL</label>
-      <input formControlName="url"
-              class="mt-2 w-full rounded-xl border px-4 py-3" />
+      <label for="job-url" class="text-sm font-medium">URL</label>
+      <input
+        id="job-url"
+        formControlName="url"
+        required
+        aria-required="true"
+        type="url"
+        autocomplete="url"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+      />
     </div>
 
     <div>
-      <label class="text-sm font-medium">Description</label>
-      <textarea formControlName="raw_description"
-                rows="12"
-                class="mt-2 w-full rounded-xl border px-4 py-3"></textarea>
+      <label for="job-description" class="text-sm font-medium">Description</label>
+      <textarea
+        id="job-description"
+        formControlName="raw_description"
+        required
+        aria-required="true"
+        rows="12"
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+      ></textarea>
     </div>
 
-    <button type="submit"
-            class="rounded-xl bg-zinc-950 px-5 py-3 text-sm font-medium text-white">
+    <button type="submit" class="rounded-xl bg-zinc-950 px-5 py-3 text-sm font-medium text-white">
       Sauvegarder
     </button>
   </form>
   ou
-  <form [formGroup]="urlForm" (ngSubmit)="importUrl()" class="space-y-4 rounded-2xl bg-white p-6 shadow-sm">
+  <form
+    [formGroup]="urlForm"
+    (ngSubmit)="importUrl()"
+    class="space-y-4 rounded-2xl bg-white p-6 shadow-sm"
+  >
     <div>
-      <label class="text-sm font-medium">URL LinkedIn / HelloWork</label>
-      <input formControlName="url"
-            placeholder="https://www.hellowork.com/fr-fr/emplois/..."
-            class="mt-2 w-full rounded-xl border px-4 py-3" />
+      <label for="job-import-url" class="text-sm font-medium">URL LinkedIn / HelloWork</label>
+      <input
+        id="job-import-url"
+        formControlName="url"
+        type="url"
+        required
+        aria-required="true"
+        placeholder="https://www.hellowork.com/fr-fr/emplois/..."
+        class="mt-2 w-full rounded-xl border px-4 py-3"
+      />
     </div>
 
-    <button type="submit"
-            class="rounded-xl bg-zinc-950 px-5 py-3 text-sm font-medium text-white">
+    <button type="submit" class="rounded-xl bg-zinc-950 px-5 py-3 text-sm font-medium text-white">
       Importer et analyser
     </button>
   </form>

@@ -1,9 +1,17 @@
-<div class="min-h-screen bg-zinc-50 text-zinc-950">
-    <div class="grid grid-cols-[260px_1fr] min-h-screen">
-        <app-sidebar />
+<a
+  href="#main-content"
+  (click)="focusMain($event)"
+  class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[10000] focus:rounded-xl focus:bg-zinc-950 focus:px-4 focus:py-3 focus:text-sm focus:font-medium focus:text-white"
+>
+  Aller au contenu principal
+</a>
 
-        <main class="p-8">
-            <router-outlet />
-        </main>
-    </div>
+<div class="min-h-screen bg-zinc-50 text-zinc-950">
+  <div class="grid grid-cols-[260px_1fr] min-h-screen">
+    <app-sidebar />
+
+    <main id="main-content" tabindex="-1" class="p-8 focus:outline-none">
+      <router-outlet />
+    </main>
+  </div>
 </div>

@@ -8,4 +8,10 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.css'],
 })
-export class ShellComponent {}
+export class ShellComponent {
+  /** `<base href="/">` makes a bare `#hash` link navigate away: focus the target manually. */
+  focusMain(event: Event): void {
+    event.preventDefault();
+    document.getElementById('main-content')?.focus();
+  }
+}

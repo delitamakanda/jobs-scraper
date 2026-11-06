@@ -1,43 +1,58 @@
- <div mat-dialog-title class="mb-6 flex items-center justify-between">
-  <h2 class="text-2xl font-bold"> Interview Preparation</h2>
-</div>
- <mat-dialog-content class="w-[700px] p-6">
-    <form [formGroup]="form" (ngSubmit)="generateInterviewPrep($event)" class="mb-6">
-      <mat-form-field class="mb-4">
-        <mat-label for="difficulty">Difficulty</mat-label>
-        <select matNativeControl id="difficulty" formControlName="difficulty" class="w-full border rounded px-3 py-2">
-          <option value="junior">Junior</option>
-          <option value="mid">Mid</option>
-          <option value="senior">Senior</option>
-        </select>
-        </mat-form-field>
+<h2 mat-dialog-title class="mb-6 text-2xl font-bold">Interview Preparation</h2>
+<mat-dialog-content class="w-[700px] p-6">
+  <form [formGroup]="form" (ngSubmit)="generateInterviewPrep($event)" class="mb-6">
+    <mat-form-field class="mb-4">
+      <mat-label>Difficulty</mat-label>
+      <select
+        matNativeControl
+        id="difficulty"
+        formControlName="difficulty"
+        class="w-full border rounded px-3 py-2"
+      >
+        <option value="junior">Junior</option>
+        <option value="mid">Mid</option>
+        <option value="senior">Senior</option>
+      </select>
+    </mat-form-field>
 
-        <mat-form-field class="mb-4">
-        <mat-label for="focus">Focus Areas</mat-label>
-        <input matInput type="text" id="focus" placeholder="separer par des virgules" formControlName="focus" class="w-full border rounded px-3 py-2" placeholder="e.g., JavaScript, React, System Design">
-        </mat-form-field>
+    <mat-form-field class="mb-4">
+      <mat-label>Focus Areas</mat-label>
+      <input
+        matInput
+        type="text"
+        id="focus"
+        formControlName="focus"
+        class="w-full border rounded px-3 py-2"
+        placeholder="e.g., JavaScript, React, System Design"
+      />
+    </mat-form-field>
 
-          <mat-form-field class="mb-4">
-        <mat-label for="language">Language</mat-label>
-        <select matNativeControl id="language" formControlName="language" class="w-full border rounded px-3 py-2">
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-        </select>
-        </mat-form-field>
-      <button
-        mat-raised-button
-        type="submit"
-        [disabled]="form.invalid"
-        color="primary"
-        class="w-full mt-4 rounded-xl"
-        >
-        Generate Interview Prep
-        </button>
-      </form>
+    <mat-form-field class="mb-4">
+      <mat-label>Language</mat-label>
+      <select
+        matNativeControl
+        id="language"
+        formControlName="language"
+        class="w-full border rounded px-3 py-2"
+      >
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+      </select>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      type="submit"
+      [disabled]="form.invalid"
+      color="primary"
+      class="w-full mt-4 rounded-xl"
+    >
+      Generate Interview Prep
+    </button>
+  </form>
 
-      <div class="rounded-2xl bg-zinc-50 p-5">
-        <pre class="whitespace-pre-wrap">
+  <div class="rounded-2xl bg-zinc-50 p-5" aria-live="polite">
+    <pre class="whitespace-pre-wrap">
         @for (question of store.questions(); track question) {
           <strong>Question:</strong> {{ question }}
         }
@@ -51,15 +66,16 @@
           <strong>Weak Point:</strong> {{ weakPoint }}
         }
         </pre>
-      </div>
-    
+  </div>
+
+  <div role="alert">
     @if (store.error()) {
-      <div class="mb-4 text-red-500">
+      <div class="mb-4 text-red-700">
         {{ store.error() }}
       </div>
     }
+  </div>
 </mat-dialog-content>
-
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
