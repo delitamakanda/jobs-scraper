@@ -1,19 +1,15 @@
 <section class="space-y-6">
-      <div>
-        <h1 class="text-3xl font-bold text-zinc-950">
-          Candidatures
-        </h1>
-        <p class="mt-1 text-zinc-500">
-          Suivi et actions IA pour ta recherche Angular senior.
-        </p>
-      </div>
+  <div>
+    <h1 class="text-3xl font-bold text-zinc-950">Candidatures</h1>
+    <p class="mt-1 text-zinc-600">Suivi et actions IA pour ta recherche Angular senior.</p>
+  </div>
 
-      @if (store.applications()) {
-        <app-application-kanban
-            [applications]="store.applications()"
-            (generateCoverLetter)="generateCoverLetter($event)"
-            (generateInterviewPrep)="generateInterviewPrep($event)"
-            (statusChanged)="onStatusChanged($event)"
-        />
-      }
+  @if (store.applications()) {
+    <app-application-kanban
+      [applications]="store.applications()"
+      (generateCoverLetter)="generateCoverLetter($event)"
+      (generateInterviewPrep)="generateInterviewPrep($event)"
+      (statusChanged)="onStatusChanged($event)"
+    />
+  }
 </section>

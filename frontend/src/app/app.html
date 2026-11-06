@@ -1,9 +1,7 @@
-<div style="visibility: hidden; width: 0; height: 0; overflow: hidden;">
-  <h1>Hello, frontend</h1>
-</div>
-<router-outlet></router-outlet>
+<router-outlet />
 @if (loading()) {
-  <div class="loading-overlay">
-    <div class="loading-spinner"></div>
+  <div class="loading-overlay" role="status">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <span class="sr-only">Chargement en cours…</span>
   </div>
 }
