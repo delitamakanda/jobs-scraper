@@ -41,6 +41,10 @@ After changing any model, generate a migration (never hand-edit an already-commi
 python manage.py makemigrations
 ```
 
+### Docker (local dev only)
+
+`docker compose up --build` starts `api` (:8000, auto-migrate, SQLite in the `sqlite-data` volume via `SQLITE_PATH`) and `web` (:4200). Run tasks with `docker compose run --rm api python manage.py test|check|createsuperuser`; `docker compose down -v` resets the DB. See README "Docker".
+
 ### Frontend (run from `frontend/`)
 
 ```bash
