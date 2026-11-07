@@ -33,6 +33,14 @@ python3 manage.py check
 python3 manage.py test
 ```
 
+### Docker (dev local uniquement)
+
+```bash
+docker compose up --build   # api :8000 + web :4200, migrations auto, SQLite dans le volume sqlite-data
+docker compose run --rm api python manage.py test
+docker compose down -v      # reset de la base
+```
+
 ### Frontend
 
 ```bash

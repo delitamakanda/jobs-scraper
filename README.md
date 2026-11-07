@@ -94,6 +94,34 @@ Django REST API for collecting job offers, extracting job details from URLs, and
 
    The API will be available at `http://127.0.0.1:8000/`.
 
+## Docker (local development only)
+
+Runs the API and the Angular SPA without installing Python or Node. **Not for production**: ports are bound to `127.0.0.1` only, `DEBUG` is on, and the image uses the development server.
+
+```bash
+cp .env.example .env      # optional; without an OpenAI key the app starts but AI features fail
+docker compose up --build
+```
+
+- SPA: http://localhost:4200 — API: http://localhost:8000/api — admin: http://localhost:8000/admin/
+- The source is bind-mounted: edits in `apps/`, `config/` and `frontend/src/` are reloaded without rebuilding.
+- Migrations are applied automatically when `api` starts.
+- SQLite lives in the named volume `sqlite-data` (`SQLITE_PATH=/data/db.sqlite3`); it survives `docker compose down`.
+
+Common commands:
+
+```bash
+docker compose run --rm api python manage.py check
+docker compose run --rm api python manage.py test
+docker compose run --rm api python manage.py makemigrations
+docker compose run --rm api python manage.py migrate
+docker compose run --rm api python manage.py createsuperuser
+docker compose run --rm web npm run build
+docker compose down -v    # stop and DELETE the database volume (reset)
+```
+
+Limits: no demo data or superuser is created automatically; after changing `requirements.txt` or `frontend/package*.json`, rerun with `--build` (use `docker compose down -v` if the `node_modules` volume is stale); file watching in `web` uses polling.
+
 ## Authentication
 
 The API uses Django REST Framework token authentication and requires authenticated requests by default.
